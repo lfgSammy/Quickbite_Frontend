@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
 import MenuPage from './pages/MenuPage';
 import MenuItemPage from './pages/MenuItemPage';
 import CartPage from './pages/CartPage';
@@ -12,6 +13,7 @@ import OrdersPage from './pages/OrdersPage';
 import OrderDetailPage from './pages/OrderDetailPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import AdminMenuPage from './pages/AdminMenuPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 function Layout({ children }) {
@@ -41,6 +43,10 @@ export default function App() {
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/orders" element={<OrdersPage />} />
                 <Route path="/orders/:orderId" element={<OrderDetailPage />} />
+              </Route>
+
+              <Route element={<AdminRoute />}>
+                <Route path="/admin/menu" element={<AdminMenuPage />} />
               </Route>
 
               <Route path="*" element={<NotFoundPage />} />
