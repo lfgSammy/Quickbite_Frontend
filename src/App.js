@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
-import Navbar from './components/Navbar';
+import TopBar from './components/TopBar';
+import BottomTabBar from './components/BottomTabBar';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
+import KitchenRoute from './components/KitchenRoute';
 import MenuPage from './pages/MenuPage';
 import MenuItemPage from './pages/MenuItemPage';
 import CartPage from './pages/CartPage';
@@ -13,14 +15,21 @@ import OrdersPage from './pages/OrdersPage';
 import OrderDetailPage from './pages/OrderDetailPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import AccountPage from './pages/AccountPage';
 import AdminMenuPage from './pages/AdminMenuPage';
+import AdminDashboardPage from './pages/AdminDashboardPage';
+import AdminRolesPage from './pages/AdminRolesPage';
+import AdminHoursPage from './pages/AdminHoursPage';
+import KitchenQueuePage from './pages/KitchenQueuePage';
+import KitchenScanPage from './pages/KitchenScanPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 function Layout({ children }) {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <main>{children}</main>
+    <div className="mx-auto min-h-screen max-w-md bg-white">
+      <TopBar />
+      <main className="pb-20">{children}</main>
+      <BottomTabBar />
     </div>
   );
 }
@@ -37,16 +46,25 @@ export default function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/payment/callback" element={<PaymentCallbackPage />} />
+              <Route path="/orders" element={<OrdersPage />} />
+              <Route path="/account" element={<AccountPage />} />
 
               <Route element={<ProtectedRoute />}>
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
-                <Route path="/orders" element={<OrdersPage />} />
                 <Route path="/orders/:orderId" element={<OrderDetailPage />} />
               </Route>
 
+              <Route element={<KitchenRoute />}>
+                <Route path="/kitchen" element={<KitchenQueuePage />} />
+                <Route path="/kitchen/scan" element={<KitchenScanPage />} />
+              </Route>
+
               <Route element={<AdminRoute />}>
+                <Route path="/admin" element={<AdminDashboardPage />} />
                 <Route path="/admin/menu" element={<AdminMenuPage />} />
+                <Route path="/admin/roles" element={<AdminRolesPage />} />
+                <Route path="/admin/hours" element={<AdminHoursPage />} />
               </Route>
 
               <Route path="*" element={<NotFoundPage />} />
