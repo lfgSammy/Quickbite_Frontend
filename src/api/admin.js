@@ -31,3 +31,21 @@ export function createShawarmaExtra(data) {
 export function createDrink(data) {
   return client.post('/menu/drinks/', data).then((res) => res.data);
 }
+
+export function getDashboard() {
+  return client.get('/order/admin/dashboard/').then((res) => res.data);
+}
+
+export function getUsers(params = {}) {
+  return client.get('/user/users/', { params }).then((res) => res.data);
+}
+
+export function assignRole(userId, role) {
+  return client
+    .patch(`/user/users/${userId}/assign-role/`, { role })
+    .then((res) => res.data);
+}
+
+export function setOperatingHours(data) {
+  return client.post('/user/restaurant/hours/', data).then((res) => res.data);
+}
