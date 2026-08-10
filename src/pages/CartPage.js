@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import Spinner from '../components/Spinner';
 import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
+import { CartIcon } from '../components/icons';
 import { formatNaira } from '../utils/format';
 
 function describeItem(item) {
@@ -21,45 +22,44 @@ function CartItemRow({ item, onUpdateQuantity, onRemove, busy }) {
   ];
 
   return (
-    <li className="flex flex-col gap-3 border-b border-gray-100 py-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex-1">
-        <p className="font-medium text-gray-900">{item.menu_item.name}</p>
-        <p className="text-sm text-gray-500">{describeItem(item)}</p>
-        {addedExtras.length > 0 && (
-          <p className="mt-1 text-xs text-gray-400">{addedExtras.join(', ')}</p>
-        )}
+    <li className="flex flex-col gap-3 rounded-2xl border border-gray-100 p-4">
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <p className="font-semibold text-brand-black">{item.menu_item.name}</p>
+          <p className="text-sm text-gray-500">{describeItem(item)}</p>
+          {addedExtras.length > 0 && (
+            <p className="mt-1 text-xs text-gray-400">{addedExtras.join(', ')}</p>
+          )}
+        </div>
+        <span className="font-bold text-brand-black">{formatNaira(item.total)}</span>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <button
             type="button"
             disabled={busy}
             onClick={() => onUpdateQuantity(item, Math.max(1, item.quantity - 1))}
-            className="h-7 w-7 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+            className="h-7 w-7 rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-50"
           >
             −
           </button>
-          <span className="w-5 text-center text-sm">{item.quantity}</span>
+          <span className="w-5 text-center text-sm font-semibold">{item.quantity}</span>
           <button
             type="button"
             disabled={busy}
             onClick={() => onUpdateQuantity(item, item.quantity + 1)}
-            className="h-7 w-7 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+            className="h-7 w-7 rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-50"
           >
             +
           </button>
         </div>
 
-        <span className="w-24 text-right font-semibold text-gray-900">
-          {formatNaira(item.total)}
-        </span>
-
         <button
           type="button"
           disabled={busy}
           onClick={() => onRemove(item)}
-          className="text-sm text-red-500 hover:underline disabled:opacity-50"
+          className="text-sm font-medium text-brand-red disabled:opacity-50"
         >
           Remove
         </button>
@@ -102,8 +102,8 @@ export default function CartPage() {
   const items = cart?.items || [];
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900">Your Cart</h1>
+    <div className="px-4 py-6">
+      <h1 className="text-2xl font-extrabold text-brand-black">Your Cart</h1>
 
       {error && (
         <div className="mt-4">
@@ -112,15 +112,18 @@ export default function CartPage() {
       )}
 
       {items.length === 0 ? (
-        <div className="py-16 text-center">
+        <div className="flex flex-col items-center px-6 py-16 text-center">
+          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100 text-gray-400">
+            <CartIcon className="h-10 w-10" />
+          </div>
           <p className="text-gray-500">Your cart is empty.</p>
-          <Link to="/" className="mt-3 inline-block text-orange-600 hover:underline">
+          <Link to="/" className="mt-3 inline-block font-medium text-brand-red">
             Browse the menu
           </Link>
         </div>
       ) : (
         <>
-          <ul className="mt-6">
+          <ul className="mt-6 flex flex-col gap-3">
             {items.map((item) => (
               <CartItemRow
                 key={item.id}
@@ -132,15 +135,17 @@ export default function CartPage() {
             ))}
           </ul>
 
-          <div className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4">
-            <span className="text-lg font-semibold text-gray-900">Total</span>
-            <span className="text-xl font-bold text-gray-900">{formatNaira(cart.total)}</span>
+          <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
+            <span className="text-base font-semibold text-brand-black">Total</span>
+            <span className="text-xl font-extrabold text-brand-black">
+              {formatNaira(cart.total)}
+            </span>
           </div>
 
           <button
             type="button"
             onClick={() => navigate('/checkout')}
-            className="mt-6 w-full rounded-md bg-orange-600 px-4 py-3 font-semibold text-white hover:bg-orange-700"
+            className="mt-6 w-full rounded-full bg-brand-red py-3.5 text-sm font-bold text-white hover:bg-brand-red-dark"
           >
             Proceed to checkout
           </button>
