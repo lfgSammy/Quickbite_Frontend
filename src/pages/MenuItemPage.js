@@ -11,7 +11,46 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import Spinner from '../components/Spinner';
 import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
+import { ChevronLeftIcon } from '../components/icons';
 import { formatNaira } from '../utils/format';
+
+function OptionPill({ selected, children, ...props }) {
+  return (
+    <button
+      type="button"
+      className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+        selected
+          ? 'border-brand-red bg-brand-red text-white'
+          : 'border-gray-200 text-gray-600 hover:border-gray-300'
+      }`}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+
+function Stepper({ value, onDecrement, onIncrement }) {
+  return (
+    <div className="flex items-center gap-2">
+      <button
+        type="button"
+        onClick={onDecrement}
+        className="h-7 w-7 rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50"
+      >
+        −
+      </button>
+      <span className="w-4 text-center text-sm font-semibold text-brand-black">{value}</span>
+      <button
+        type="button"
+        onClick={onIncrement}
+        className="h-7 w-7 rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50"
+      >
+        +
+      </button>
+    </div>
+  );
+}
 
 export default function MenuItemPage() {
   const { id } = useParams();
@@ -174,9 +213,9 @@ export default function MenuItemPage() {
 
   if (error && !item) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-12">
+      <div className="px-4 py-12">
         <ErrorMessage message={error} />
-        <Link to="/" className="mt-4 inline-block text-orange-600 hover:underline">
+        <Link to="/" className="mt-4 inline-block font-medium text-brand-red">
           Back to menu
         </Link>
       </div>
@@ -186,243 +225,191 @@ export default function MenuItemPage() {
   if (!item) return null;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
-      <Link to="/" className="text-sm text-orange-600 hover:underline">
-        ← Back to menu
+    <div className="pb-4">
+      <Link to="/" className="flex items-center gap-1 px-4 pt-4 text-sm font-medium text-gray-500">
+        <ChevronLeftIcon className="h-4 w-4" />
+        Back to menu
       </Link>
 
-      <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <div className="aspect-[4/3] w-full overflow-hidden rounded-lg bg-gray-100">
-          {item.image_url ? (
-            <img src={item.image_url} alt={item.name} className="h-full w-full object-cover" />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-gray-300">
-              No image
-            </div>
-          )}
-        </div>
-
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">{item.name}</h1>
-          {item.description && <p className="mt-2 text-gray-500">{item.description}</p>}
-          {!item.is_available && (
-            <p className="mt-3 text-sm font-medium text-red-500">
-              This item is currently unavailable.
-            </p>
-          )}
-        </div>
+      <div className="mt-3 aspect-square w-full overflow-hidden bg-gray-100">
+        {item.image_url ? (
+          <img src={item.image_url} alt={item.name} className="h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-gray-300">
+            No image
+          </div>
+        )}
       </div>
 
-      <div className="mt-8 flex flex-col gap-6">
-        {error && <ErrorMessage message={error} />}
-
-        {item.item_type === 'rice' && item.sizes?.length > 0 && (
-          <fieldset>
-            <legend className="mb-2 text-sm font-semibold text-gray-900">Size</legend>
-            <div className="flex flex-wrap gap-2">
-              {item.sizes.map((size) => (
-                <button
-                  type="button"
-                  key={size.id}
-                  onClick={() => setSizeId(String(size.id))}
-                  className={`rounded-md border px-4 py-2 text-sm font-medium transition ${
-                    sizeId === String(size.id)
-                      ? 'border-orange-600 bg-orange-50 text-orange-700'
-                      : 'border-gray-300 text-gray-700 hover:border-gray-400'
-                  }`}
-                >
-                  {size.name} · {formatNaira(size.price)}
-                </button>
-              ))}
-            </div>
-          </fieldset>
+      <div className="px-4">
+        <h1 className="mt-4 text-2xl font-extrabold text-brand-black">{item.name}</h1>
+        {item.description && <p className="mt-1 text-sm text-gray-500">{item.description}</p>}
+        {!item.is_available && (
+          <p className="mt-3 text-sm font-semibold text-brand-red">
+            This item is currently unavailable.
+          </p>
         )}
 
-        {item.item_type === 'rice' && riceTypes.length > 0 && (
-          <fieldset>
-            <legend className="mb-2 text-sm font-semibold text-gray-900">Rice type</legend>
-            <div className="flex flex-wrap gap-2">
-              {riceTypes.map((type) => (
-                <button
-                  type="button"
-                  key={type.id}
-                  onClick={() => setRiceTypeId(String(type.id))}
-                  className={`rounded-md border px-4 py-2 text-sm font-medium transition ${
-                    riceTypeId === String(type.id)
-                      ? 'border-orange-600 bg-orange-50 text-orange-700'
-                      : 'border-gray-300 text-gray-700 hover:border-gray-400'
-                  }`}
-                >
-                  {type.name}
-                </button>
-              ))}
-            </div>
-          </fieldset>
-        )}
+        <div className="mt-6 flex flex-col gap-6">
+          {error && <ErrorMessage message={error} />}
 
-        {item.item_type === 'rice' && riceExtras.length > 0 && (
-          <fieldset>
-            <legend className="mb-2 text-sm font-semibold text-gray-900">Extras</legend>
-            <div className="flex flex-col divide-y divide-gray-100 rounded-md border border-gray-200">
-              {riceExtras.map((extra) => (
-                <div key={extra.id} className="flex items-center justify-between px-4 py-3">
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">{extra.name}</p>
-                    <p className="text-xs text-gray-500">{formatNaira(extra.price)} each</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() =>
+          {item.item_type === 'rice' && item.sizes?.length > 0 && (
+            <fieldset>
+              <legend className="mb-2 text-sm font-bold text-brand-black">Size</legend>
+              <div className="flex flex-wrap gap-2">
+                {item.sizes.map((size) => (
+                  <OptionPill
+                    key={size.id}
+                    selected={sizeId === String(size.id)}
+                    onClick={() => setSizeId(String(size.id))}
+                  >
+                    {size.name} · {formatNaira(size.price)}
+                  </OptionPill>
+                ))}
+              </div>
+            </fieldset>
+          )}
+
+          {item.item_type === 'rice' && riceTypes.length > 0 && (
+            <fieldset>
+              <legend className="mb-2 text-sm font-bold text-brand-black">Rice type</legend>
+              <div className="flex flex-wrap gap-2">
+                {riceTypes.map((type) => (
+                  <OptionPill
+                    key={type.id}
+                    selected={riceTypeId === String(type.id)}
+                    onClick={() => setRiceTypeId(String(type.id))}
+                  >
+                    {type.name}
+                  </OptionPill>
+                ))}
+              </div>
+            </fieldset>
+          )}
+
+          {item.item_type === 'rice' && riceExtras.length > 0 && (
+            <fieldset>
+              <legend className="mb-2 text-sm font-bold text-brand-black">Extras</legend>
+              <div className="flex flex-col divide-y divide-gray-100 rounded-2xl border border-gray-100">
+                {riceExtras.map((extra) => (
+                  <div key={extra.id} className="flex items-center justify-between px-4 py-3">
+                    <div>
+                      <p className="text-sm font-medium text-brand-black">{extra.name}</p>
+                      <p className="text-xs text-gray-400">{formatNaira(extra.price)} each</p>
+                    </div>
+                    <Stepper
+                      value={riceExtraQty[extra.id] || 0}
+                      onDecrement={() =>
                         updateRiceExtraQty(
                           extra.id,
                           (riceExtraQty[extra.id] || 0) - 1,
                           extra.max_quantity
                         )
                       }
-                      className="h-7 w-7 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
-                    >
-                      −
-                    </button>
-                    <span className="w-4 text-center text-sm">{riceExtraQty[extra.id] || 0}</span>
-                    <button
-                      type="button"
-                      onClick={() =>
+                      onIncrement={() =>
                         updateRiceExtraQty(
                           extra.id,
                           (riceExtraQty[extra.id] || 0) + 1,
                           extra.max_quantity
                         )
                       }
-                      className="h-7 w-7 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
+                    />
+                  </div>
+                ))}
+              </div>
+            </fieldset>
+          )}
+
+          {item.item_type === 'shawarma' && item.shawarma_options?.length > 0 && (
+            <fieldset>
+              <legend className="mb-2 text-sm font-bold text-brand-black">Option</legend>
+              <div className="flex flex-wrap gap-2">
+                {item.shawarma_options
+                  .filter((o) => o.is_available)
+                  .map((option) => (
+                    <OptionPill
+                      key={option.id}
+                      selected={shawarmaOptionId === String(option.id)}
+                      onClick={() => setShawarmaOptionId(String(option.id))}
                     >
-                      +
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </fieldset>
-        )}
+                      {option.name} · {formatNaira(option.price)}
+                    </OptionPill>
+                  ))}
+              </div>
+            </fieldset>
+          )}
 
-        {item.item_type === 'shawarma' && item.shawarma_options?.length > 0 && (
-          <fieldset>
-            <legend className="mb-2 text-sm font-semibold text-gray-900">Option</legend>
-            <div className="flex flex-wrap gap-2">
-              {item.shawarma_options
-                .filter((o) => o.is_available)
-                .map((option) => (
-                  <button
-                    type="button"
-                    key={option.id}
-                    onClick={() => setShawarmaOptionId(String(option.id))}
-                    className={`rounded-md border px-4 py-2 text-sm font-medium transition ${
-                      shawarmaOptionId === String(option.id)
-                        ? 'border-orange-600 bg-orange-50 text-orange-700'
-                        : 'border-gray-300 text-gray-700 hover:border-gray-400'
-                    }`}
+          {item.item_type === 'shawarma' && shawarmaExtras.length > 0 && (
+            <fieldset>
+              <legend className="mb-2 text-sm font-bold text-brand-black">Extras</legend>
+              <div className="flex flex-col divide-y divide-gray-100 rounded-2xl border border-gray-100">
+                {shawarmaExtras.map((extra) => (
+                  <label
+                    key={extra.id}
+                    className="flex cursor-pointer items-center justify-between px-4 py-3"
                   >
-                    {option.name} · {formatNaira(option.price)}
-                  </button>
-                ))}
-            </div>
-          </fieldset>
-        )}
-
-        {item.item_type === 'shawarma' && shawarmaExtras.length > 0 && (
-          <fieldset>
-            <legend className="mb-2 text-sm font-semibold text-gray-900">Extras</legend>
-            <div className="flex flex-col divide-y divide-gray-100 rounded-md border border-gray-200">
-              {shawarmaExtras.map((extra) => (
-                <label
-                  key={extra.id}
-                  className="flex cursor-pointer items-center justify-between px-4 py-3"
-                >
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">{extra.name}</p>
-                    <p className="text-xs text-gray-500">{formatNaira(extra.price)}</p>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={!!shawarmaExtraOn[extra.id]}
-                    onChange={() => toggleShawarmaExtra(extra.id)}
-                    className="h-4 w-4 accent-orange-600"
-                  />
-                </label>
-              ))}
-            </div>
-          </fieldset>
-        )}
-
-        {drinks.length > 0 && (
-          <fieldset>
-            <legend className="mb-2 text-sm font-semibold text-gray-900">Add a drink</legend>
-            <div className="flex flex-col divide-y divide-gray-100 rounded-md border border-gray-200">
-              {drinks
-                .filter((d) => d.is_available)
-                .map((drink) => (
-                  <div key={drink.id} className="flex items-center justify-between px-4 py-3">
                     <div>
-                      <p className="text-sm font-medium text-gray-800">{drink.name}</p>
-                      <p className="text-xs text-gray-500">{formatNaira(drink.price)} each</p>
+                      <p className="text-sm font-medium text-brand-black">{extra.name}</p>
+                      <p className="text-xs text-gray-400">{formatNaira(extra.price)}</p>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => updateDrinkQty(drink.id, (drinkQty[drink.id] || 0) - 1)}
-                        className="h-7 w-7 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
-                      >
-                        −
-                      </button>
-                      <span className="w-4 text-center text-sm">{drinkQty[drink.id] || 0}</span>
-                      <button
-                        type="button"
-                        onClick={() => updateDrinkQty(drink.id, (drinkQty[drink.id] || 0) + 1)}
-                        className="h-7 w-7 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
+                    <input
+                      type="checkbox"
+                      checked={!!shawarmaExtraOn[extra.id]}
+                      onChange={() => toggleShawarmaExtra(extra.id)}
+                      className="h-4 w-4 accent-brand-red"
+                    />
+                  </label>
                 ))}
-            </div>
+              </div>
+            </fieldset>
+          )}
+
+          {drinks.length > 0 && (
+            <fieldset>
+              <legend className="mb-2 text-sm font-bold text-brand-black">Add a drink</legend>
+              <div className="flex flex-col divide-y divide-gray-100 rounded-2xl border border-gray-100">
+                {drinks
+                  .filter((d) => d.is_available)
+                  .map((drink) => (
+                    <div key={drink.id} className="flex items-center justify-between px-4 py-3">
+                      <div>
+                        <p className="text-sm font-medium text-brand-black">{drink.name}</p>
+                        <p className="text-xs text-gray-400">{formatNaira(drink.price)} each</p>
+                      </div>
+                      <Stepper
+                        value={drinkQty[drink.id] || 0}
+                        onDecrement={() => updateDrinkQty(drink.id, (drinkQty[drink.id] || 0) - 1)}
+                        onIncrement={() => updateDrinkQty(drink.id, (drinkQty[drink.id] || 0) + 1)}
+                      />
+                    </div>
+                  ))}
+              </div>
+            </fieldset>
+          )}
+
+          <fieldset>
+            <legend className="mb-2 text-sm font-bold text-brand-black">Quantity</legend>
+            <Stepper
+              value={quantity}
+              onDecrement={() => setQuantity((q) => Math.max(1, q - 1))}
+              onIncrement={() => setQuantity((q) => q + 1)}
+            />
           </fieldset>
-        )}
 
-        <fieldset>
-          <legend className="mb-2 text-sm font-semibold text-gray-900">Quantity</legend>
-          <div className="flex items-center gap-3">
+          <div className="sticky bottom-20 flex items-center justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-lg">
+            <div>
+              <p className="text-xs text-gray-400">Total</p>
+              <p className="text-xl font-extrabold text-brand-black">{formatNaira(total)}</p>
+            </div>
             <button
               type="button"
-              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              className="h-8 w-8 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
+              onClick={handleAddToCart}
+              disabled={submitting || !item.is_available}
+              className="rounded-full bg-brand-red px-6 py-3 text-sm font-bold text-white hover:bg-brand-red-dark disabled:opacity-60"
             >
-              −
-            </button>
-            <span className="w-6 text-center">{quantity}</span>
-            <button
-              type="button"
-              onClick={() => setQuantity((q) => q + 1)}
-              className="h-8 w-8 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
-            >
-              +
+              {submitting ? 'Adding…' : 'Add to cart'}
             </button>
           </div>
-        </fieldset>
-
-        <div className="sticky bottom-0 flex items-center justify-between border-t border-gray-200 bg-white py-4">
-          <div>
-            <p className="text-xs text-gray-500">Total</p>
-            <p className="text-xl font-bold text-gray-900">{formatNaira(total)}</p>
-          </div>
-          <button
-            type="button"
-            onClick={handleAddToCart}
-            disabled={submitting || !item.is_available}
-            className="rounded-md bg-orange-600 px-6 py-3 font-semibold text-white hover:bg-orange-700 disabled:opacity-60"
-          >
-            {submitting ? 'Adding…' : 'Add to cart'}
-          </button>
         </div>
       </div>
     </div>

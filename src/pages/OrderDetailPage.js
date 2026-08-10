@@ -5,6 +5,7 @@ import { initializePayment } from '../api/payment';
 import OrderStatusBadge from '../components/OrderStatusBadge';
 import Spinner from '../components/Spinner';
 import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
+import { ChevronLeftIcon } from '../components/icons';
 import { formatNaira } from '../utils/format';
 
 function describeOrderItem(item) {
@@ -64,9 +65,9 @@ export default function OrderDetailPage() {
 
   if (error || !order) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-12">
+      <div className="px-4 py-12">
         <ErrorMessage message={error || 'Order not found.'} />
-        <Link to="/orders" className="mt-4 inline-block text-orange-600 hover:underline">
+        <Link to="/orders" className="mt-4 inline-block font-medium text-brand-red">
           Back to orders
         </Link>
       </div>
@@ -74,13 +75,14 @@ export default function OrderDetailPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
-      <Link to="/orders" className="text-sm text-orange-600 hover:underline">
-        ← Back to orders
+    <div className="px-4 py-6">
+      <Link to="/orders" className="flex items-center gap-1 text-sm font-medium text-gray-500">
+        <ChevronLeftIcon className="h-4 w-4" />
+        Back to orders
       </Link>
 
       <div className="mt-4 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Order #{order.id}</h1>
+        <h1 className="text-2xl font-extrabold text-brand-black">Order #{order.id}</h1>
         <OrderStatusBadge status={order.status} />
       </div>
 
@@ -94,12 +96,12 @@ export default function OrderDetailPage() {
         </div>
       )}
 
-      <div className="mt-6 rounded-md border border-gray-200">
+      <div className="mt-6 rounded-2xl border border-gray-100">
         <ul className="divide-y divide-gray-100">
           {order.items.map((item) => (
             <li key={item.id} className="flex items-center justify-between px-4 py-3">
               <div>
-                <p className="font-medium text-gray-900">
+                <p className="font-medium text-brand-black">
                   {describeOrderItem(item) || `Item #${item.menu_item}`} x{item.quantity}
                 </p>
                 {item.rice_extras?.length > 0 && (
@@ -113,11 +115,13 @@ export default function OrderDetailPage() {
                   </p>
                 )}
               </div>
-              <span className="font-semibold text-gray-900">{formatNaira(item.item_total)}</span>
+              <span className="font-semibold text-brand-black">
+                {formatNaira(item.item_total)}
+              </span>
             </li>
           ))}
         </ul>
-        <div className="flex items-center justify-between px-4 py-3 font-semibold text-gray-900">
+        <div className="flex items-center justify-between px-4 py-3 font-bold text-brand-black">
           <span>Total</span>
           <span>{formatNaira(order.total_amount)}</span>
         </div>
@@ -128,14 +132,14 @@ export default function OrderDetailPage() {
           <button
             onClick={handlePayNow}
             disabled={busy}
-            className="rounded-md bg-orange-600 px-4 py-2 font-semibold text-white hover:bg-orange-700 disabled:opacity-60"
+            className="rounded-full bg-brand-red px-5 py-2.5 text-sm font-bold text-white hover:bg-brand-red-dark disabled:opacity-60"
           >
             Pay now
           </button>
           <button
             onClick={handleCancel}
             disabled={busy}
-            className="rounded-md border border-red-300 px-4 py-2 font-medium text-red-600 hover:bg-red-50 disabled:opacity-60"
+            className="rounded-full border border-gray-200 px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-60"
           >
             Cancel order
           </button>
@@ -143,7 +147,7 @@ export default function OrderDetailPage() {
       )}
 
       {['paid', 'preparing', 'ready'].includes(order.status) && (
-        <p className="mt-6 break-all rounded-md bg-gray-50 px-4 py-3 text-xs text-gray-500">
+        <p className="mt-6 break-all rounded-2xl bg-gray-50 px-4 py-3 text-xs text-gray-500">
           QR pickup code: {order.qr_code}
         </p>
       )}

@@ -36,9 +36,9 @@ export default function PaymentCallbackPage() {
 
   if (status === 'error') {
     return (
-      <div className="mx-auto max-w-lg px-4 py-16 text-center">
+      <div className="px-6 py-16 text-center">
         <ErrorMessage message={error} />
-        <Link to="/orders" className="mt-4 inline-block text-orange-600 hover:underline">
+        <Link to="/orders" className="mt-4 inline-block font-medium text-brand-red">
           View my orders
         </Link>
       </div>
@@ -46,23 +46,23 @@ export default function PaymentCallbackPage() {
   }
 
   return (
-    <div className="mx-auto max-w-lg px-4 py-16 text-center">
+    <div className="px-6 py-16 text-center">
       <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-3xl text-green-600">
         ✓
       </div>
-      <h1 className="mt-4 text-2xl font-bold text-gray-900">Payment confirmed!</h1>
+      <h1 className="mt-4 text-2xl font-extrabold text-brand-black">Payment confirmed!</h1>
       <p className="mt-2 text-gray-500">
         Order #{result.order_id} is paid. A confirmation email with your pickup QR code is on
         its way.
       </p>
       {result.qr_code && (
-        <p className="mt-3 break-all rounded-md bg-gray-50 px-4 py-2 text-xs text-gray-500">
+        <p className="mt-3 break-all rounded-2xl bg-gray-50 px-4 py-2 text-xs text-gray-500">
           QR code: {result.qr_code}
         </p>
       )}
       <Link
         to={`/orders/${result.order_id}`}
-        className="mt-6 inline-block rounded-md bg-orange-600 px-6 py-3 font-semibold text-white hover:bg-orange-700"
+        className="mt-6 inline-block rounded-full bg-brand-red px-6 py-3 text-sm font-bold text-white hover:bg-brand-red-dark"
       >
         View order
       </Link>

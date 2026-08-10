@@ -3,6 +3,9 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
 
+const inputClass =
+  'rounded-xl border border-gray-200 px-3 py-2.5 focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red';
+
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -31,9 +34,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="mx-auto flex max-w-md flex-col gap-6 px-4 py-12">
+    <div className="flex flex-col gap-6 px-4 py-10">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
+        <h1 className="text-2xl font-extrabold text-brand-black">Welcome back</h1>
         <p className="mt-1 text-sm text-gray-500">Log in to order from QuickBite.</p>
       </div>
 
@@ -41,40 +44,40 @@ export default function LoginPage() {
         <ErrorMessage message={error} />
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-gray-700">Username</span>
+          <span className="text-sm font-semibold text-brand-black">Username</span>
           <input
             name="username"
             value={form.username}
             onChange={handleChange}
             required
-            className="rounded-md border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            className={inputClass}
           />
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-gray-700">Password</span>
+          <span className="text-sm font-semibold text-brand-black">Password</span>
           <input
             type="password"
             name="password"
             value={form.password}
             onChange={handleChange}
             required
-            className="rounded-md border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            className={inputClass}
           />
         </label>
 
         <button
           type="submit"
           disabled={submitting}
-          className="mt-2 rounded-md bg-orange-600 px-4 py-2 font-semibold text-white hover:bg-orange-700 disabled:opacity-60"
+          className="mt-2 rounded-full bg-brand-red py-3.5 text-sm font-bold text-white hover:bg-brand-red-dark disabled:opacity-60"
         >
           {submitting ? 'Logging in…' : 'Log in'}
         </button>
       </form>
 
-      <p className="text-sm text-gray-600">
+      <p className="text-center text-sm text-gray-500">
         Don't have an account?{' '}
-        <Link to="/register" className="font-medium text-orange-600 hover:underline">
+        <Link to="/register" className="font-semibold text-brand-red">
           Sign up
         </Link>
       </p>

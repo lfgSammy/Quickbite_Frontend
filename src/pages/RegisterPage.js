@@ -3,6 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
 
+const inputClass =
+  'rounded-xl border border-gray-200 px-3 py-2.5 focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red';
+
 export default function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -34,9 +37,9 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="mx-auto flex max-w-md flex-col gap-6 px-4 py-12">
+    <div className="flex flex-col gap-6 px-4 py-10">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Create your account</h1>
+        <h1 className="text-2xl font-extrabold text-brand-black">Create your account</h1>
         <p className="mt-1 text-sm text-gray-500">
           Sign up to order ahead and skip the line.
         </p>
@@ -46,47 +49,49 @@ export default function RegisterPage() {
         <ErrorMessage message={error} />
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-gray-700">Username</span>
+          <span className="text-sm font-semibold text-brand-black">Username</span>
           <input
             name="username"
             value={form.username}
             onChange={handleChange}
             required
-            className="rounded-md border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            className={inputClass}
           />
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-gray-700">Email</span>
+          <span className="text-sm font-semibold text-brand-black">Email</span>
           <input
             type="email"
             name="email"
             value={form.email}
             onChange={handleChange}
             required
-            className="rounded-md border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            className={inputClass}
           />
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-gray-700">Phone number (optional)</span>
+          <span className="text-sm font-semibold text-brand-black">
+            Phone number (optional)
+          </span>
           <input
             name="phone_number"
             value={form.phone_number}
             onChange={handleChange}
-            className="rounded-md border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            className={inputClass}
           />
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-gray-700">Password</span>
+          <span className="text-sm font-semibold text-brand-black">Password</span>
           <input
             type="password"
             name="password"
             value={form.password}
             onChange={handleChange}
             required
-            className="rounded-md border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            className={inputClass}
           />
           <span className="text-xs text-gray-400">
             At least 8 characters, with an uppercase letter, lowercase letter, and a number.
@@ -96,15 +101,15 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-2 rounded-md bg-orange-600 px-4 py-2 font-semibold text-white hover:bg-orange-700 disabled:opacity-60"
+          className="mt-2 rounded-full bg-brand-red py-3.5 text-sm font-bold text-white hover:bg-brand-red-dark disabled:opacity-60"
         >
           {submitting ? 'Creating account…' : 'Sign up'}
         </button>
       </form>
 
-      <p className="text-sm text-gray-600">
+      <p className="text-center text-sm text-gray-500">
         Already have an account?{' '}
-        <Link to="/login" className="font-medium text-orange-600 hover:underline">
+        <Link to="/login" className="font-semibold text-brand-red">
           Log in
         </Link>
       </p>

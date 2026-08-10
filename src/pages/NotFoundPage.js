@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom';
 
 export default function NotFoundPage() {
   return (
-    <div className="mx-auto max-w-lg px-4 py-24 text-center">
-      <h1 className="text-3xl font-bold text-gray-900">404</h1>
+    <div className="px-4 py-24 text-center">
+      <h1 className="text-3xl font-extrabold text-brand-black">404</h1>
       <p className="mt-2 text-gray-500">This page doesn't exist.</p>
-      <Link to="/" className="mt-4 inline-block text-orange-600 hover:underline">
+      <Link to="/" className="mt-4 inline-block font-semibold text-brand-red">
         Back to menu
       </Link>
     </div>
