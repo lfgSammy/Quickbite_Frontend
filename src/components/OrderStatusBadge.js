@@ -10,7 +10,7 @@ const STATUS_STYLES = {
 export default function OrderStatusBadge({ status }) {
   const style = STATUS_STYLES[status] || 'bg-gray-100 text-gray-600';
   return (
-    <span className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${style}`}>
+    <span className={`rounded-full px-3 py-1 text-caption font-semibold capitalize ${style}`}>
       {status}
     </span>
   );
