@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import TopBar from './components/TopBar';
@@ -25,9 +25,12 @@ import KitchenScanPage from './pages/KitchenScanPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 function Layout({ children }) {
+  const location = useLocation();
+  const hasOwnHeader = /^\/menu\/[^/]+$/.test(location.pathname);
+
   return (
     <div className="mx-auto min-h-screen max-w-md bg-white">
-      <TopBar />
+      {!hasOwnHeader && <TopBar />}
       <main className="pb-20">{children}</main>
       <BottomTabBar />
     </div>
