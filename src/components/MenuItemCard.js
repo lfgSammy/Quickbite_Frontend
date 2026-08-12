@@ -19,16 +19,16 @@ export default function MenuItemCard({ item }) {
           </div>
         )}
         {startingPrice != null && (
-          <span className="absolute bottom-2 left-2 rounded-full bg-brand-red px-3 py-1 text-xs font-bold text-white">
+          <span className="absolute bottom-2 left-2 rounded-full bg-brand-red px-3 py-1 text-caption font-bold text-white">
             ₦{Number(startingPrice).toLocaleString('en-NG')}
           </span>
         )}
       </div>
 
       <div className="flex flex-col gap-0.5 px-3 py-2.5">
-        <h3 className="truncate text-sm font-bold text-brand-black">{item.name}</h3>
+        <h3 className="truncate text-body-sm font-semibold text-brand-black">{item.name}</h3>
         {!item.is_available && (
-          <span className="text-xs font-medium text-brand-red">Currently unavailable</span>
+          <span className="text-caption font-medium text-brand-red">Currently unavailable</span>
         )}
       </div>
     </Link>
