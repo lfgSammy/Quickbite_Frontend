@@ -17,7 +17,7 @@ export default function BottomTabBar() {
             to={to}
             end={end}
             className={({ isActive }) =>
-              `flex flex-1 flex-col items-center gap-1 py-2.5 text-xs font-medium ${
+              `flex flex-1 flex-col items-center gap-1 py-2.5 text-caption font-medium ${
                 isActive ? 'text-brand-red' : 'text-gray-400'
               }`
             }
