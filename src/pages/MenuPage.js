@@ -42,25 +42,25 @@ export default function MenuPage() {
 
   return (
     <div className="px-4 py-5">
-      <h1 className="text-2xl font-extrabold text-brand-black">
+      <h1 className="text-h1 text-brand-black">
         Welcome, {user?.username || 'Guest'}
       </h1>
-      <p className="mt-1 text-sm text-gray-500">What would you like to eat today?</p>
+      <p className="mt-1 text-body-sm text-gray-500">What would you like to eat today?</p>
 
       <div className="relative mt-5 overflow-hidden rounded-3xl bg-brand-black px-6 py-8">
-        <p className="text-xs font-bold uppercase tracking-widest text-white/70">
+        <p className="text-caption font-bold uppercase tracking-widest text-white/70">
           Freshly made, every day
         </p>
-        <p className="mt-2 text-4xl font-black leading-none">
+        <p className="mt-2 text-display">
           <span className="text-white">Order</span>{' '}
           <span className="text-brand-yellow">Ahead</span>
         </p>
-        <p className="mt-3 max-w-[70%] text-sm text-white/70">
+        <p className="mt-3 max-w-[70%] text-body-sm text-white/70">
           Skip the queue — customize your meal and pick it up when it's ready.
         </p>
       </div>
 
-      <div className="mt-6 rounded-full bg-brand-black py-3 text-center text-sm font-bold uppercase tracking-widest text-white">
+      <div className="mt-6 rounded-full bg-brand-black py-3 text-center text-btn-sm uppercase tracking-widest text-white">
         Menu
       </div>
 
@@ -69,7 +69,7 @@ export default function MenuPage() {
           <button
             key={f.value}
             onClick={() => setFilter(f.value)}
-            className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+            className={`rounded-full px-4 py-1.5 text-btn-sm transition ${
               filter === f.value
                 ? 'bg-brand-red text-white'
                 : 'bg-gray-100 text-gray-500 hover:bg-gray-200'

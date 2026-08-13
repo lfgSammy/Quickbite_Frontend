@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
 
 const inputClass =
-  'rounded-xl border border-gray-200 px-3 py-2.5 focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red';
+  'rounded-xl border border-gray-200 px-3 py-2.5 text-input focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -36,15 +36,15 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col gap-6 px-4 py-10">
       <div>
-        <h1 className="text-2xl font-extrabold text-brand-black">Welcome back</h1>
-        <p className="mt-1 text-sm text-gray-500">Log in to order from QuickBite.</p>
+        <h1 className="text-h1 text-brand-black">Welcome back</h1>
+        <p className="mt-1 text-body-sm text-gray-500">Log in to order from QuickBite.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <ErrorMessage message={error} />
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-semibold text-brand-black">Username</span>
+          <span className="text-label text-brand-black">Username</span>
           <input
             name="username"
             value={form.username}
@@ -55,7 +55,7 @@ export default function LoginPage() {
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-semibold text-brand-black">Password</span>
+          <span className="text-label text-brand-black">Password</span>
           <input
             type="password"
             name="password"
@@ -69,13 +69,13 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-2 rounded-full bg-brand-red py-3.5 text-sm font-bold text-white hover:bg-brand-red-dark disabled:opacity-60"
+          className="mt-2 rounded-full bg-brand-red py-3.5 text-btn-lg text-white hover:bg-brand-red-dark disabled:opacity-60"
         >
           {submitting ? 'Logging in…' : 'Log in'}
         </button>
       </form>
 
-      <p className="text-center text-sm text-gray-500">
+      <p className="text-center text-body-sm text-gray-500">
         Don't have an account?{' '}
         <Link to="/register" className="font-semibold text-brand-red">
           Sign up

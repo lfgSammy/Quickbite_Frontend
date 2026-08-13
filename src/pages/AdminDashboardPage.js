@@ -10,8 +10,8 @@ import { formatNaira } from '../utils/format';
 function StatTile({ label, value }) {
   return (
     <div className="rounded-2xl border border-gray-100 p-4">
-      <p className="text-xs text-gray-400">{label}</p>
-      <p className="mt-1 text-xl font-extrabold text-brand-black">{value}</p>
+      <p className="text-caption text-gray-400">{label}</p>
+      <p className="mt-1 text-h5 text-brand-black">{value}</p>
     </div>
   );
 }
@@ -44,7 +44,7 @@ export default function AdminDashboardPage() {
     <div className="px-4 py-6">
       <div className="flex items-center gap-3">
         <BackButton />
-        <h1 className="text-2xl font-extrabold text-brand-black">Admin Dashboard</h1>
+        <h1 className="text-h1 text-brand-black">Admin Dashboard</h1>
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-3">
@@ -56,7 +56,7 @@ export default function AdminDashboardPage() {
 
       {statusBreakdown?.length > 0 && (
         <div className="mt-6">
-          <h2 className="text-sm font-bold text-brand-black">Orders by status</h2>
+          <h2 className="text-label text-brand-black">Orders by status</h2>
           <div className="mt-2 flex flex-wrap gap-2">
             {statusBreakdown.map((s) => (
               <div
@@ -64,7 +64,7 @@ export default function AdminDashboardPage() {
                 className="flex items-center gap-2 rounded-full border border-gray-100 py-1 pl-1 pr-3"
               >
                 <OrderStatusBadge status={s.status} />
-                <span className="text-sm font-semibold text-brand-black">{s.count}</span>
+                <span className="text-body-sm font-semibold text-brand-black">{s.count}</span>
               </div>
             ))}
           </div>
@@ -72,14 +72,14 @@ export default function AdminDashboardPage() {
       )}
 
       <div className="mt-6 flex items-center justify-between">
-        <h2 className="text-sm font-bold text-brand-black">Pending orders</h2>
-        <Link to="/kitchen" className="text-sm font-semibold text-brand-red">
+        <h2 className="text-label text-brand-black">Pending orders</h2>
+        <Link to="/kitchen" className="text-body-sm font-semibold text-brand-red">
           Manage in Kitchen
         </Link>
       </div>
 
       {pendingOrders?.length === 0 ? (
-        <p className="mt-3 text-sm text-gray-500">Nothing pending right now.</p>
+        <p className="mt-3 text-body-sm text-gray-500">Nothing pending right now.</p>
       ) : (
         <ul className="mt-3 flex flex-col gap-2">
           {pendingOrders?.map((order) => (
@@ -88,8 +88,8 @@ export default function AdminDashboardPage() {
               className="flex items-center justify-between rounded-2xl border border-gray-100 px-4 py-3"
             >
               <div>
-                <p className="font-semibold text-brand-black">Order #{order.id}</p>
-                <p className="text-xs text-gray-400">
+                <p className="text-body font-semibold text-brand-black">Order #{order.id}</p>
+                <p className="text-caption text-gray-400">
                   Pickup: {new Date(order.pickup_time).toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit',
@@ -97,7 +97,7 @@ export default function AdminDashboardPage() {
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <span className="font-semibold text-brand-black">
+                <span className="text-body font-semibold text-brand-black">
                   {formatNaira(order.total_amount)}
                 </span>
                 <OrderStatusBadge status={order.status} />

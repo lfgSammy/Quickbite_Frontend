@@ -25,13 +25,13 @@ function CartItemRow({ item, onUpdateQuantity, onRemove, busy }) {
     <li className="flex flex-col gap-3 rounded-2xl border border-gray-100 p-4">
       <div className="flex items-start justify-between gap-2">
         <div>
-          <p className="font-semibold text-brand-black">{item.menu_item.name}</p>
-          <p className="text-sm text-gray-500">{describeItem(item)}</p>
+          <p className="text-body font-semibold text-brand-black">{item.menu_item.name}</p>
+          <p className="text-body-sm text-gray-500">{describeItem(item)}</p>
           {addedExtras.length > 0 && (
-            <p className="mt-1 text-xs text-gray-400">{addedExtras.join(', ')}</p>
+            <p className="mt-1 text-caption text-gray-400">{addedExtras.join(', ')}</p>
           )}
         </div>
-        <span className="font-bold text-brand-black">{formatNaira(item.total)}</span>
+        <span className="text-body font-bold text-brand-black">{formatNaira(item.total)}</span>
       </div>
 
       <div className="flex items-center justify-between">
@@ -44,7 +44,7 @@ function CartItemRow({ item, onUpdateQuantity, onRemove, busy }) {
           >
             −
           </button>
-          <span className="w-5 text-center text-sm font-semibold">{item.quantity}</span>
+          <span className="w-5 text-center text-btn-sm">{item.quantity}</span>
           <button
             type="button"
             disabled={busy}
@@ -59,7 +59,7 @@ function CartItemRow({ item, onUpdateQuantity, onRemove, busy }) {
           type="button"
           disabled={busy}
           onClick={() => onRemove(item)}
-          className="text-sm font-medium text-brand-red disabled:opacity-50"
+          className="text-btn-sm text-brand-red disabled:opacity-50"
         >
           Remove
         </button>
@@ -103,7 +103,7 @@ export default function CartPage() {
 
   return (
     <div className="px-4 py-6">
-      <h1 className="text-2xl font-extrabold text-brand-black">Your Cart</h1>
+      <h1 className="text-h1 text-brand-black">Your Cart</h1>
 
       {error && (
         <div className="mt-4">
@@ -136,8 +136,8 @@ export default function CartPage() {
           </ul>
 
           <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
-            <span className="text-base font-semibold text-brand-black">Total</span>
-            <span className="text-xl font-extrabold text-brand-black">
+            <span className="text-body font-semibold text-brand-black">Total</span>
+            <span className="text-h4 text-brand-black">
               {formatNaira(cart.total)}
             </span>
           </div>
@@ -145,7 +145,7 @@ export default function CartPage() {
           <button
             type="button"
             onClick={() => navigate('/checkout')}
-            className="mt-6 w-full rounded-full bg-brand-red py-3.5 text-sm font-bold text-white hover:bg-brand-red-dark"
+            className="mt-6 w-full rounded-full bg-brand-red py-3.5 text-btn-lg text-white hover:bg-brand-red-dark"
           >
             Proceed to checkout
           </button>

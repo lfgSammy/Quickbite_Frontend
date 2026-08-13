@@ -11,14 +11,14 @@ function UserRow({ user, onChangeRole, busy, isSelf }) {
   return (
     <li className="flex items-center justify-between gap-3 rounded-2xl border border-gray-100 p-4">
       <div>
-        <p className="font-semibold text-brand-black">{user.username}</p>
-        <p className="text-xs text-gray-400">{user.email}</p>
+        <p className="text-body font-semibold text-brand-black">{user.username}</p>
+        <p className="text-caption text-gray-400">{user.email}</p>
       </div>
       <select
         value={user.role}
         disabled={busy || isSelf}
         onChange={(e) => onChangeRole(user, e.target.value)}
-        className="rounded-full border border-gray-200 px-3 py-1.5 text-sm font-semibold capitalize text-brand-black disabled:opacity-60"
+        className="rounded-full border border-gray-200 px-3 py-1.5 text-btn-sm capitalize text-brand-black disabled:opacity-60"
       >
         {ROLES.map((role) => (
           <option key={role} value={role}>
@@ -68,9 +68,9 @@ export default function AdminRolesPage() {
     <div className="px-4 py-6">
       <div className="flex items-center gap-3">
         <BackButton />
-        <h1 className="text-2xl font-extrabold text-brand-black">Manage Roles</h1>
+        <h1 className="text-h1 text-brand-black">Manage Roles</h1>
       </div>
-      <p className="mt-1 text-sm text-gray-500">
+      <p className="mt-1 text-body-sm text-gray-500">
         Promote staff to kitchen or admin access.
       </p>
 
@@ -78,7 +78,7 @@ export default function AdminRolesPage() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search by username"
-        className="mt-4 w-full rounded-xl border border-gray-200 px-3 py-2.5 focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red"
+        className="mt-4 w-full rounded-xl border border-gray-200 px-3 py-2.5 text-input focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red"
       />
 
       {error && (

@@ -11,14 +11,44 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import Spinner from '../components/Spinner';
 import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
-import { ChevronLeftIcon } from '../components/icons';
+import { ChevronLeftIcon, CartIcon } from '../components/icons';
 import { formatNaira } from '../utils/format';
+
+function ItemDetailHeader() {
+  const navigate = useNavigate();
+  const { itemCount } = useCart();
+
+  return (
+    <header className="sticky top-0 z-20 flex items-center justify-between border-b border-gray-100 bg-white px-4 py-3">
+      <button
+        type="button"
+        onClick={() => navigate(-1)}
+        aria-label="Go back"
+        className="flex h-9 w-9 items-center justify-center text-brand-black"
+      >
+        <ChevronLeftIcon className="h-5 w-5" />
+      </button>
+      <h1 className="text-h5 text-brand-black">Select Meal</h1>
+      <Link
+        to="/cart"
+        className="relative rounded-full border border-gray-200 p-2 text-brand-black"
+      >
+        <CartIcon className="h-5 w-5" />
+        {itemCount > 0 && (
+          <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-red text-caption font-bold text-white">
+            {itemCount}
+          </span>
+        )}
+      </Link>
+    </header>
+  );
+}
 
 function OptionPill({ selected, children, ...props }) {
   return (
     <button
       type="button"
-      className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+      className={`rounded-full border px-4 py-2 text-btn-sm transition ${
         selected
           ? 'border-brand-red bg-brand-red text-white'
           : 'border-gray-200 text-gray-600 hover:border-gray-300'
@@ -40,7 +70,7 @@ function Stepper({ value, onDecrement, onIncrement }) {
       >
         −
       </button>
-      <span className="w-4 text-center text-sm font-semibold text-brand-black">{value}</span>
+      <span className="w-4 text-center text-btn-sm text-brand-black">{value}</span>
       <button
         type="button"
         onClick={onIncrement}
@@ -209,43 +239,76 @@ export default function MenuItemPage() {
     }
   }
 
-  if (loading) return <Spinner label="Loading item…" />;
+  if (loading) {
+    return (
+      <div className="pb-4">
+        <ItemDetailHeader />
+        <Spinner label="Loading item…" />
+      </div>
+    );
+  }
 
   if (error && !item) {
     return (
-      <div className="px-4 py-12">
-        <ErrorMessage message={error} />
-        <Link to="/" className="mt-4 inline-block font-medium text-brand-red">
-          Back to menu
-        </Link>
+      <div className="pb-4">
+        <ItemDetailHeader />
+        <div className="px-4 py-12">
+          <ErrorMessage message={error} />
+          <Link to="/" className="mt-4 inline-block font-medium text-brand-red">
+            Back to menu
+          </Link>
+        </div>
       </div>
     );
   }
 
   if (!item) return null;
 
+  const selectedLabel = selectedSize?.name || selectedShawarmaOption?.name || '';
+
   return (
     <div className="pb-4">
-      <Link to="/" className="flex items-center gap-1 px-4 pt-4 text-sm font-medium text-gray-500">
-        <ChevronLeftIcon className="h-4 w-4" />
-        Back to menu
-      </Link>
+      <ItemDetailHeader />
 
-      <div className="mt-3 aspect-square w-full overflow-hidden bg-gray-100">
-        {item.image_url ? (
-          <img src={item.image_url} alt={item.name} className="h-full w-full object-cover" />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center text-gray-300">
-            No image
+      <div className="px-4 pt-4">
+        <div className="rounded-2xl border border-gray-100 p-4">
+          <div className="flex items-start gap-3">
+            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-gray-100">
+              {item.image_url ? (
+                <img src={item.image_url} alt={item.name} className="h-full w-full object-cover" />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-[10px] text-gray-300">
+                  No image
+                </div>
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="truncate text-h4 text-brand-black">{item.name}</h2>
+              {selectedLabel && (
+                <p className="text-caption font-medium uppercase tracking-wide text-gray-400">
+                  {selectedLabel}
+                </p>
+              )}
+              {item.description && (
+                <p className="mt-1 line-clamp-2 text-body-sm text-gray-500">{item.description}</p>
+              )}
+            </div>
           </div>
-        )}
-      </div>
+          <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
+            <div>
+              <span className="block text-caption text-gray-400">Total</span>
+              <span className="text-h5 text-brand-black">{formatNaira(total)}</span>
+            </div>
+            <Stepper
+              value={quantity}
+              onDecrement={() => setQuantity((q) => Math.max(1, q - 1))}
+              onIncrement={() => setQuantity((q) => q + 1)}
+            />
+          </div>
+        </div>
 
-      <div className="px-4">
-        <h1 className="mt-4 text-2xl font-extrabold text-brand-black">{item.name}</h1>
-        {item.description && <p className="mt-1 text-sm text-gray-500">{item.description}</p>}
         {!item.is_available && (
-          <p className="mt-3 text-sm font-semibold text-brand-red">
+          <p className="mt-3 text-body-sm font-semibold text-brand-red">
             This item is currently unavailable.
           </p>
         )}
@@ -255,7 +318,7 @@ export default function MenuItemPage() {
 
           {item.item_type === 'rice' && item.sizes?.length > 0 && (
             <fieldset>
-              <legend className="mb-2 text-sm font-bold text-brand-black">Size</legend>
+              <legend className="mb-2 text-label text-brand-black">Size</legend>
               <div className="flex flex-wrap gap-2">
                 {item.sizes.map((size) => (
                   <OptionPill
@@ -272,7 +335,7 @@ export default function MenuItemPage() {
 
           {item.item_type === 'rice' && riceTypes.length > 0 && (
             <fieldset>
-              <legend className="mb-2 text-sm font-bold text-brand-black">Rice type</legend>
+              <legend className="mb-2 text-label text-brand-black">Rice type</legend>
               <div className="flex flex-wrap gap-2">
                 {riceTypes.map((type) => (
                   <OptionPill
@@ -289,13 +352,13 @@ export default function MenuItemPage() {
 
           {item.item_type === 'rice' && riceExtras.length > 0 && (
             <fieldset>
-              <legend className="mb-2 text-sm font-bold text-brand-black">Extras</legend>
+              <legend className="mb-2 text-label text-brand-black">Extras</legend>
               <div className="flex flex-col divide-y divide-gray-100 rounded-2xl border border-gray-100">
                 {riceExtras.map((extra) => (
                   <div key={extra.id} className="flex items-center justify-between px-4 py-3">
                     <div>
-                      <p className="text-sm font-medium text-brand-black">{extra.name}</p>
-                      <p className="text-xs text-gray-400">{formatNaira(extra.price)} each</p>
+                      <p className="text-body-sm font-medium text-brand-black">{extra.name}</p>
+                      <p className="text-caption text-gray-400">{formatNaira(extra.price)} each</p>
                     </div>
                     <Stepper
                       value={riceExtraQty[extra.id] || 0}
@@ -322,7 +385,7 @@ export default function MenuItemPage() {
 
           {item.item_type === 'shawarma' && item.shawarma_options?.length > 0 && (
             <fieldset>
-              <legend className="mb-2 text-sm font-bold text-brand-black">Option</legend>
+              <legend className="mb-2 text-label text-brand-black">Option</legend>
               <div className="flex flex-wrap gap-2">
                 {item.shawarma_options
                   .filter((o) => o.is_available)
@@ -341,7 +404,7 @@ export default function MenuItemPage() {
 
           {item.item_type === 'shawarma' && shawarmaExtras.length > 0 && (
             <fieldset>
-              <legend className="mb-2 text-sm font-bold text-brand-black">Extras</legend>
+              <legend className="mb-2 text-label text-brand-black">Extras</legend>
               <div className="flex flex-col divide-y divide-gray-100 rounded-2xl border border-gray-100">
                 {shawarmaExtras.map((extra) => (
                   <label
@@ -349,8 +412,8 @@ export default function MenuItemPage() {
                     className="flex cursor-pointer items-center justify-between px-4 py-3"
                   >
                     <div>
-                      <p className="text-sm font-medium text-brand-black">{extra.name}</p>
-                      <p className="text-xs text-gray-400">{formatNaira(extra.price)}</p>
+                      <p className="text-body-sm font-medium text-brand-black">{extra.name}</p>
+                      <p className="text-caption text-gray-400">{formatNaira(extra.price)}</p>
                     </div>
                     <input
                       type="checkbox"
@@ -366,15 +429,15 @@ export default function MenuItemPage() {
 
           {drinks.length > 0 && (
             <fieldset>
-              <legend className="mb-2 text-sm font-bold text-brand-black">Add a drink</legend>
+              <legend className="mb-2 text-label text-brand-black">Add a drink</legend>
               <div className="flex flex-col divide-y divide-gray-100 rounded-2xl border border-gray-100">
                 {drinks
                   .filter((d) => d.is_available)
                   .map((drink) => (
                     <div key={drink.id} className="flex items-center justify-between px-4 py-3">
                       <div>
-                        <p className="text-sm font-medium text-brand-black">{drink.name}</p>
-                        <p className="text-xs text-gray-400">{formatNaira(drink.price)} each</p>
+                        <p className="text-body-sm font-medium text-brand-black">{drink.name}</p>
+                        <p className="text-caption text-gray-400">{formatNaira(drink.price)} each</p>
                       </div>
                       <Stepper
                         value={drinkQty[drink.id] || 0}
@@ -387,25 +450,16 @@ export default function MenuItemPage() {
             </fieldset>
           )}
 
-          <fieldset>
-            <legend className="mb-2 text-sm font-bold text-brand-black">Quantity</legend>
-            <Stepper
-              value={quantity}
-              onDecrement={() => setQuantity((q) => Math.max(1, q - 1))}
-              onIncrement={() => setQuantity((q) => q + 1)}
-            />
-          </fieldset>
-
           <div className="sticky bottom-20 flex items-center justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-lg">
             <div>
-              <p className="text-xs text-gray-400">Total</p>
-              <p className="text-xl font-extrabold text-brand-black">{formatNaira(total)}</p>
+              <p className="text-caption text-gray-400">Total</p>
+              <p className="text-h4 text-brand-black">{formatNaira(total)}</p>
             </div>
             <button
               type="button"
               onClick={handleAddToCart}
               disabled={submitting || !item.is_available}
-              className="rounded-full bg-brand-red px-6 py-3 text-sm font-bold text-white hover:bg-brand-red-dark disabled:opacity-60"
+              className="rounded-full bg-brand-red px-6 py-3 text-btn-lg text-white hover:bg-brand-red-dark disabled:opacity-60"
             >
               {submitting ? 'Adding…' : 'Add to cart'}
             </button>

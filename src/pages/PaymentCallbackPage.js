@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { verifyPayment } from '../api/payment';
 import Spinner from '../components/Spinner';
+import QrCodeImage from '../components/QrCodeImage';
 import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
 
 export default function PaymentCallbackPage() {
@@ -50,19 +51,22 @@ export default function PaymentCallbackPage() {
       <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-3xl text-green-600">
         ✓
       </div>
-      <h1 className="mt-4 text-2xl font-extrabold text-brand-black">Payment confirmed!</h1>
-      <p className="mt-2 text-gray-500">
+      <h1 className="mt-4 text-h1 text-brand-black">Payment confirmed!</h1>
+      <p className="mt-2 text-body text-gray-500">
         Order #{result.order_id} is paid. A confirmation email with your pickup QR code is on
         its way.
       </p>
       {result.qr_code && (
-        <p className="mt-3 break-all rounded-2xl bg-gray-50 px-4 py-2 text-xs text-gray-500">
-          QR code: {result.qr_code}
-        </p>
+        <div className="mt-4 flex flex-col items-center gap-3 rounded-2xl bg-gray-50 px-4 py-6">
+          <div className="rounded-2xl bg-white p-3 shadow-sm">
+            <QrCodeImage value={result.qr_code} size={160} />
+          </div>
+          <p className="break-all text-center text-caption text-gray-400">{result.qr_code}</p>
+        </div>
       )}
       <Link
         to={`/orders/${result.order_id}`}
-        className="mt-6 inline-block rounded-full bg-brand-red px-6 py-3 text-sm font-bold text-white hover:bg-brand-red-dark"
+        className="mt-6 inline-block rounded-full bg-brand-red px-6 py-3 text-btn-lg text-white hover:bg-brand-red-dark"
       >
         View order
       </Link>

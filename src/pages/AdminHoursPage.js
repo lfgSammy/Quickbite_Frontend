@@ -43,8 +43,8 @@ function DayRow({ day, initial, onSaved }) {
   return (
     <div className="rounded-2xl border border-gray-100 p-4">
       <div className="flex items-center justify-between">
-        <p className="font-semibold text-brand-black">{day.name}</p>
-        <label className="flex items-center gap-2 text-sm text-gray-500">
+        <p className="text-h5 text-brand-black">{day.name}</p>
+        <label className="flex items-center gap-2 text-label text-gray-500">
           Open
           <input
             type="checkbox"
@@ -61,15 +61,15 @@ function DayRow({ day, initial, onSaved }) {
           value={openTime}
           onChange={(e) => setOpenTime(e.target.value)}
           disabled={!isOpen}
-          className="flex-1 rounded-xl border border-gray-200 px-3 py-2 text-sm disabled:opacity-50"
+          className="flex-1 rounded-xl border border-gray-200 px-3 py-2 text-input disabled:opacity-50"
         />
-        <span className="text-gray-400">to</span>
+        <span className="text-body-sm text-gray-400">to</span>
         <input
           type="time"
           value={closeTime}
           onChange={(e) => setCloseTime(e.target.value)}
           disabled={!isOpen}
-          className="flex-1 rounded-xl border border-gray-200 px-3 py-2 text-sm disabled:opacity-50"
+          className="flex-1 rounded-xl border border-gray-200 px-3 py-2 text-input disabled:opacity-50"
         />
       </div>
 
@@ -82,7 +82,7 @@ function DayRow({ day, initial, onSaved }) {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="mt-3 w-full rounded-full bg-brand-black py-2 text-sm font-bold text-white disabled:opacity-60"
+        className="mt-3 w-full rounded-full bg-brand-black py-2 text-btn-lg text-white disabled:opacity-60"
       >
         {saving ? 'Saving…' : 'Save'}
       </button>
@@ -118,9 +118,9 @@ export default function AdminHoursPage() {
     <div className="px-4 py-6">
       <div className="flex items-center gap-3">
         <BackButton />
-        <h1 className="text-2xl font-extrabold text-brand-black">Operating Hours</h1>
+        <h1 className="text-h1 text-brand-black">Operating Hours</h1>
       </div>
-      <p className="mt-1 text-sm text-gray-500">
+      <p className="mt-1 text-body-sm text-gray-500">
         Customers can only book pickup times within these hours.
       </p>
 

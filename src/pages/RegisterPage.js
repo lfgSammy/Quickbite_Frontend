@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
 
 const inputClass =
-  'rounded-xl border border-gray-200 px-3 py-2.5 focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red';
+  'rounded-xl border border-gray-200 px-3 py-2.5 text-input focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red';
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -39,8 +39,8 @@ export default function RegisterPage() {
   return (
     <div className="flex flex-col gap-6 px-4 py-10">
       <div>
-        <h1 className="text-2xl font-extrabold text-brand-black">Create your account</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-h1 text-brand-black">Create your account</h1>
+        <p className="mt-1 text-body-sm text-gray-500">
           Sign up to order ahead and skip the line.
         </p>
       </div>
@@ -49,7 +49,7 @@ export default function RegisterPage() {
         <ErrorMessage message={error} />
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-semibold text-brand-black">Username</span>
+          <span className="text-label text-brand-black">Username</span>
           <input
             name="username"
             value={form.username}
@@ -60,7 +60,7 @@ export default function RegisterPage() {
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-semibold text-brand-black">Email</span>
+          <span className="text-label text-brand-black">Email</span>
           <input
             type="email"
             name="email"
@@ -72,7 +72,7 @@ export default function RegisterPage() {
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-semibold text-brand-black">
+          <span className="text-label text-brand-black">
             Phone number (optional)
           </span>
           <input
@@ -84,7 +84,7 @@ export default function RegisterPage() {
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-semibold text-brand-black">Password</span>
+          <span className="text-label text-brand-black">Password</span>
           <input
             type="password"
             name="password"
@@ -93,7 +93,7 @@ export default function RegisterPage() {
             required
             className={inputClass}
           />
-          <span className="text-xs text-gray-400">
+          <span className="text-caption text-gray-400">
             At least 8 characters, with an uppercase letter, lowercase letter, and a number.
           </span>
         </label>
@@ -101,13 +101,13 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-2 rounded-full bg-brand-red py-3.5 text-sm font-bold text-white hover:bg-brand-red-dark disabled:opacity-60"
+          className="mt-2 rounded-full bg-brand-red py-3.5 text-btn-lg text-white hover:bg-brand-red-dark disabled:opacity-60"
         >
           {submitting ? 'Creating account…' : 'Sign up'}
         </button>
       </form>
 
-      <p className="text-center text-sm text-gray-500">
+      <p className="text-center text-body-sm text-gray-500">
         Already have an account?{' '}
         <Link to="/login" className="font-semibold text-brand-red">
           Log in

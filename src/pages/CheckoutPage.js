@@ -63,13 +63,13 @@ export default function CheckoutPage() {
 
   return (
     <div className="px-4 py-6">
-      <h1 className="text-2xl font-extrabold text-brand-black">Checkout</h1>
+      <h1 className="text-h1 text-brand-black">Checkout</h1>
 
       <div className="mt-6 rounded-2xl border border-gray-100 p-4">
-        <h2 className="mb-3 text-sm font-bold text-brand-black">Order summary</h2>
+        <h2 className="mb-3 text-label text-brand-black">Order summary</h2>
         <ul className="flex flex-col gap-2">
           {items.map((item) => (
-            <li key={item.id} className="flex justify-between text-sm text-gray-600">
+            <li key={item.id} className="flex justify-between text-body-sm text-gray-600">
               <span>
                 {item.menu_item.name} x{item.quantity}
               </span>
@@ -77,15 +77,15 @@ export default function CheckoutPage() {
             </li>
           ))}
         </ul>
-        <div className="mt-3 flex justify-between border-t border-gray-100 pt-3 font-bold text-brand-black">
+        <div className="mt-3 flex justify-between border-t border-gray-100 pt-3 text-body font-bold text-brand-black">
           <span>Total</span>
           <span>{formatNaira(cart.total)}</span>
         </div>
       </div>
 
       {hours.length > 0 && (
-        <div className="mt-4 rounded-2xl bg-gray-50 p-4 text-sm text-gray-600">
-          <p className="mb-2 font-bold text-brand-black">Operating hours</p>
+        <div className="mt-4 rounded-2xl bg-gray-50 p-4 text-body-sm text-gray-600">
+          <p className="mb-2 text-label text-brand-black">Operating hours</p>
           <ul className="grid grid-cols-2 gap-x-4 gap-y-1">
             {hours.map((h) => (
               <li key={h.day}>
@@ -100,20 +100,20 @@ export default function CheckoutPage() {
         <ErrorMessage message={error} />
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-semibold text-brand-black">Pickup time</span>
+          <span className="text-label text-brand-black">Pickup time</span>
           <input
             type="datetime-local"
             value={pickupTime}
             onChange={(e) => setPickupTime(e.target.value)}
             required
-            className="rounded-xl border border-gray-200 px-3 py-2.5 focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red"
+            className="rounded-xl border border-gray-200 px-3 py-2.5 text-input focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red"
           />
         </label>
 
         <button
           type="submit"
           disabled={submitting}
-          className="mt-2 rounded-full bg-brand-red py-3.5 text-sm font-bold text-white hover:bg-brand-red-dark disabled:opacity-60"
+          className="mt-2 rounded-full bg-brand-red py-3.5 text-btn-lg text-white hover:bg-brand-red-dark disabled:opacity-60"
         >
           {submitting ? 'Placing order…' : `Pay ${formatNaira(cart.total)} with Paystack`}
         </button>

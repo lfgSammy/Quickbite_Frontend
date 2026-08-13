@@ -14,14 +14,14 @@ function LoginPrompt() {
       <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100 text-gray-400">
         <OrdersIcon className="h-10 w-10" />
       </div>
-      <h1 className="text-2xl font-extrabold text-brand-black">View Your Orders</h1>
-      <p className="mt-2 text-sm text-gray-500">
+      <h1 className="text-h1 text-brand-black">View Your Orders</h1>
+      <p className="mt-2 text-body-sm text-gray-500">
         Login to view your order history and track your ongoing orders.
       </p>
       <Link
         to="/login"
         state={{ from: { pathname: '/orders' } }}
-        className="mt-8 w-full rounded-full bg-brand-red py-3.5 text-center font-semibold text-white hover:bg-brand-red-dark"
+        className="mt-8 w-full rounded-full bg-brand-red py-3.5 text-center text-btn-lg text-white hover:bg-brand-red-dark"
       >
         Login to Continue
       </Link>
@@ -59,7 +59,7 @@ export default function OrdersPage() {
 
   return (
     <div className="px-4 py-6">
-      <h1 className="text-2xl font-extrabold text-brand-black">Order History</h1>
+      <h1 className="text-h1 text-brand-black">Order History</h1>
 
       {error && (
         <div className="mt-4">
@@ -83,13 +83,13 @@ export default function OrdersPage() {
                 className="flex items-center justify-between rounded-2xl border border-gray-100 bg-white px-4 py-3.5 shadow-sm"
               >
                 <div>
-                  <p className="font-semibold text-brand-black">Order #{order.id}</p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-body font-semibold text-brand-black">Order #{order.id}</p>
+                  <p className="text-caption text-gray-400">
                     {new Date(order.created_at).toLocaleString()}
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="font-semibold text-brand-black">
+                  <span className="text-body font-semibold text-brand-black">
                     {formatNaira(order.total_amount)}
                   </span>
                   <OrderStatusBadge status={order.status} />
