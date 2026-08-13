@@ -50,7 +50,7 @@ function OptionPill({ selected, children, ...props }) {
       type="button"
       className={`rounded-full border px-4 py-2 text-btn-sm transition ${
         selected
-          ? 'border-brand-red bg-brand-red text-white'
+          ? 'border-brand-black bg-brand-black text-white'
           : 'border-gray-200 text-gray-600 hover:border-gray-300'
       }`}
       {...props}
@@ -172,7 +172,7 @@ export default function MenuItemPage() {
       return sum + Number(drink.price) * qty;
     }, 0);
 
-    return basePrice * quantity + riceExtrasTotal + shawarmaExtrasTotal + drinksTotal;
+    return (basePrice + riceExtrasTotal + shawarmaExtrasTotal + drinksTotal) * quantity;
   }, [
     selectedSize,
     selectedShawarmaOption,
@@ -199,14 +199,14 @@ export default function MenuItemPage() {
     setDrinkQty((prev) => ({ ...prev, [drinkId]: clamped }));
   }
 
-  async function handleAddToCart() {
+  async function handleAddToCart(redirectTo, action) {
     if (!isAuthenticated) {
       navigate('/login', { state: { from: { pathname: `/menu/${id}` } } });
       return;
     }
 
     setError('');
-    setSubmitting(true);
+    setSubmitting(action);
 
     const payload = {
       menu_item_id: item.id,
@@ -231,7 +231,7 @@ export default function MenuItemPage() {
 
     try {
       await addItem(payload);
-      navigate('/cart');
+      navigate(redirectTo);
     } catch (err) {
       setError(extractErrorMessage(err, 'Could not add this item to your cart.'));
     } finally {
@@ -450,19 +450,29 @@ export default function MenuItemPage() {
             </fieldset>
           )}
 
-          <div className="sticky bottom-20 flex items-center justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-lg">
-            <div>
-              <p className="text-caption text-gray-400">Total</p>
-              <p className="text-h4 text-brand-black">{formatNaira(total)}</p>
+          <div className="sticky bottom-20 flex flex-col gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-lg">
+            <div className="flex items-center justify-between">
+              <span className="text-caption text-gray-400">Total</span>
+              <span className="text-h4 text-brand-black">{formatNaira(total)}</span>
             </div>
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              disabled={submitting || !item.is_available}
-              className="rounded-full bg-brand-red px-6 py-3 text-btn-lg text-white hover:bg-brand-red-dark disabled:opacity-60"
-            >
-              {submitting ? 'Adding…' : 'Add to cart'}
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => handleAddToCart('/cart', 'cart')}
+                disabled={!!submitting || !item.is_available}
+                className="flex-1 rounded-full bg-brand-black py-3 text-btn-lg text-white hover:bg-gray-900 disabled:opacity-60"
+              >
+                {submitting === 'cart' ? 'Adding…' : 'Add to cart'}
+              </button>
+              <button
+                type="button"
+                onClick={() => handleAddToCart('/checkout', 'buy')}
+                disabled={!!submitting || !item.is_available}
+                className="flex-1 rounded-full bg-brand-red py-3 text-btn-lg text-white hover:bg-brand-red-dark disabled:opacity-60"
+              >
+                {submitting === 'buy' ? 'Processing…' : 'Buy Now →'}
+              </button>
+            </div>
           </div>
         </div>
       </div>
