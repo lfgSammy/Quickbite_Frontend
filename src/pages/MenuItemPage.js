@@ -96,6 +96,7 @@ export default function MenuItemPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
 
   const [quantity, setQuantity] = useState(1);
   const [sizeId, setSizeId] = useState('');
@@ -206,6 +207,7 @@ export default function MenuItemPage() {
     }
 
     setError('');
+    setAddedToCart(false);
     setSubmitting(action);
 
     const payload = {
@@ -231,7 +233,12 @@ export default function MenuItemPage() {
 
     try {
       await addItem(payload);
-      navigate(redirectTo);
+      if (redirectTo) {
+        navigate(redirectTo);
+      } else {
+        setAddedToCart(true);
+        setTimeout(() => setAddedToCart(false), 2000);
+      }
     } catch (err) {
       setError(extractErrorMessage(err, 'Could not add this item to your cart.'));
     } finally {
@@ -458,11 +465,11 @@ export default function MenuItemPage() {
             <div className="flex gap-2">
               <button
                 type="button"
-                onClick={() => handleAddToCart('/cart', 'cart')}
+                onClick={() => handleAddToCart(null, 'cart')}
                 disabled={!!submitting || !item.is_available}
                 className="flex-1 rounded-full bg-brand-black py-3 text-btn-lg text-white hover:bg-gray-900 disabled:opacity-60"
               >
-                {submitting === 'cart' ? 'Adding…' : 'Add to cart'}
+                {submitting === 'cart' ? 'Adding…' : addedToCart ? 'Added ✓' : 'Add to cart'}
               </button>
               <button
                 type="button"
