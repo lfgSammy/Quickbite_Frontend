@@ -115,7 +115,7 @@ export default function CheckoutPage() {
           disabled={submitting}
           className="mt-2 rounded-full bg-brand-red py-3.5 text-btn-lg text-white hover:bg-brand-red-dark disabled:opacity-60"
         >
-          {submitting ? 'Placing order…' : `Pay ${formatNaira(cart.total)} with Paystack`}
+          {submitting ? 'Placing order…' : 'Buy Now'}
         </button>
       </form>
     </div>
