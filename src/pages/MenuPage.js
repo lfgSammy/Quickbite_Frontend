@@ -56,7 +56,7 @@ export default function MenuPage() {
           <span className="text-brand-yellow">Ahead</span>
         </p>
         <p className="mt-3 max-w-[70%] text-body-sm text-white/70">
-          Skip the queue — customize your meal and pick it up when it's ready.
+          Skip the queue, customize your meal and pick it up when it's ready
         </p>
       </div>
 
