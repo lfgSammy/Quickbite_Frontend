@@ -477,7 +477,7 @@ export default function MenuItemPage() {
                 disabled={!!submitting || !item.is_available}
                 className="flex-1 rounded-full bg-brand-red py-3 text-btn-lg text-white hover:bg-brand-red-dark disabled:opacity-60"
               >
-                {submitting === 'buy' ? 'Processing…' : 'Buy Now →'}
+                {submitting === 'buy' ? 'Processing…' : 'Buy Now'}
               </button>
             </div>
           </div>
