@@ -12,6 +12,7 @@ import { formatNaira } from '../utils/format';
 const FILTERS = [
   { value: 'active', label: 'Active', statuses: ['paid', 'preparing'] },
   { value: 'ready', label: 'Ready', statuses: ['ready'] },
+  { value: 'collected', label: 'Collected', statuses: ['collected'] },
   { value: 'all', label: 'All', statuses: null },
 ];
 
