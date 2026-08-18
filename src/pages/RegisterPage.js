@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
+import { GoogleIcon } from '../components/icons';
+import { redirectToGoogle } from '../utils/googleAuth';
 
 const inputClass =
   'rounded-xl border border-gray-200 px-3 py-2.5 text-input focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red';
@@ -106,6 +108,21 @@ export default function RegisterPage() {
           {submitting ? 'Creating account…' : 'Sign up'}
         </button>
       </form>
+
+      <div className="flex items-center gap-3">
+        <div className="h-px flex-1 bg-gray-100" />
+        <span className="text-caption text-gray-400">OR</span>
+        <div className="h-px flex-1 bg-gray-100" />
+      </div>
+
+      <button
+        type="button"
+        onClick={() => redirectToGoogle('/')}
+        className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-200 py-3 text-btn-lg font-medium text-brand-black hover:bg-gray-50"
+      >
+        <GoogleIcon className="h-5 w-5" />
+        Continue with Google
+      </button>
 
       <p className="text-center text-body-sm text-gray-500">
         Already have an account?{' '}
