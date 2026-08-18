@@ -43,6 +43,13 @@ export function AuthProvider({ children }) {
     return data.user;
   }
 
+  async function loginWithGoogle(code, redirectUrl) {
+    const data = await authApi.googleAuth({ code, redirect_url: redirectUrl });
+    setTokens({ access: data.access, refresh: data.refresh });
+    setUser(data.user);
+    return data.user;
+  }
+
   function logout() {
     clearTokens();
     setUser(null);
@@ -60,6 +67,7 @@ export function AuthProvider({ children }) {
     isAuthenticated: !!user,
     login,
     register,
+    loginWithGoogle,
     logout,
     refreshProfile,
   };
