@@ -8,6 +8,10 @@ export function login(data) {
   return client.post('/user/auth/login/', data).then((res) => res.data);
 }
 
+export function googleAuth(data) {
+  return client.post('/user/auth/google/', data).then((res) => res.data);
+}
+
 export function getProfile() {
   return client.get('/user/auth/profile/').then((res) => res.data);
 }
