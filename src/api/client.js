@@ -39,6 +39,7 @@ client.interceptors.response.use(
       '/user/auth/login/',
       '/user/auth/register/',
       '/user/auth/refresh/',
+      '/user/auth/google/',
     ].some((path) => originalRequest?.url?.includes(path));
 
     if (
