@@ -15,6 +15,7 @@ import OrdersPage from './pages/OrdersPage';
 import OrderDetailPage from './pages/OrderDetailPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import GoogleCallbackPage from './pages/GoogleCallbackPage';
 import AccountPage from './pages/AccountPage';
 import AdminMenuPage from './pages/AdminMenuPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
@@ -48,6 +49,7 @@ export default function App() {
               <Route path="/menu/:id" element={<MenuItemPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/auth/google/callback" element={<GoogleCallbackPage />} />
               <Route path="/payment/callback" element={<PaymentCallbackPage />} />
               <Route path="/orders" element={<OrdersPage />} />
               <Route path="/account" element={<AccountPage />} />
