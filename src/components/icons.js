@@ -90,6 +90,26 @@ export function MoreIcon(props) {
   );
 }
 
+export function EyeIcon(props) {
+  return (
+    <Svg {...props}>
+      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z" />
+      <circle cx="12" cy="12" r="3" />
+    </Svg>
+  );
+}
+
+export function EyeOffIcon(props) {
+  return (
+    <Svg {...props}>
+      <path d="M9.9 5.1A10.4 10.4 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-4 5" />
+      <path d="M6.1 6.6C3.4 8.5 2 12 2 12s3.6 7 10 7a9.6 9.6 0 0 0 4.2-.9" />
+      <path d="M9.5 9.6a3 3 0 0 0 4.2 4.2" />
+      <path d="M3 3l18 18" />
+    </Svg>
+  );
+}
+
 export function GoogleIcon({ className }) {
   return (
     <svg viewBox="0 0 18 18" className={className || 'h-5 w-5'}>
