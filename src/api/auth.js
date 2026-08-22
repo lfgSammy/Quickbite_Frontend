@@ -12,6 +12,18 @@ export function googleAuth(data) {
   return client.post('/user/auth/google/', data).then((res) => res.data);
 }
 
+export function forgotPassword(data) {
+  return client.post('/user/auth/forgot-password/', data).then((res) => res.data);
+}
+
+export function verifyResetOtp(data) {
+  return client.post('/user/auth/verify-reset-otp/', data).then((res) => res.data);
+}
+
+export function resetPassword(data) {
+  return client.post('/user/auth/reset-password/', data).then((res) => res.data);
+}
+
 export function getProfile() {
   return client.get('/user/auth/profile/').then((res) => res.data);
 }
