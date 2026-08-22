@@ -46,6 +46,24 @@ export default function PaymentCallbackPage() {
     );
   }
 
+  if (result.warning) {
+    return (
+      <div className="px-6 py-16 text-center">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 text-3xl text-yellow-600">
+          !
+        </div>
+        <h1 className="mt-4 text-h1 text-brand-black">We've got this</h1>
+        <p className="mt-2 text-body text-gray-500">{result.warning}</p>
+        <Link
+          to={`/orders/${result.order_id}`}
+          className="mt-6 inline-block rounded-full bg-brand-red px-6 py-3 text-btn-lg text-white hover:bg-brand-red-dark"
+        >
+          View order
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="px-6 py-16 text-center">
       <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-3xl text-green-600">
