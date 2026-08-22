@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
 import { GoogleIcon } from '../components/icons';
 import { redirectToGoogle } from '../utils/googleAuth';
+import PasswordInput from '../components/PasswordInput';
 
 const inputClass =
   'rounded-xl border border-gray-200 px-3 py-2.5 text-input focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red';
@@ -57,9 +58,13 @@ export default function LoginPage() {
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-label text-brand-black">Password</span>
-          <input
-            type="password"
+          <div className="flex items-center justify-between">
+            <span className="text-label text-brand-black">Password</span>
+            <Link to="/forgot-password" className="text-caption font-semibold text-brand-red">
+              Forgot password?
+            </Link>
+          </div>
+          <PasswordInput
             name="password"
             value={form.password}
             onChange={handleChange}
