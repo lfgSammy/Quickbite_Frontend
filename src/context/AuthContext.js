@@ -61,6 +61,12 @@ export function AuthProvider({ children }) {
     return profile;
   }
 
+  async function updateUserProfile(data) {
+    const updated = await authApi.updateProfile(data);
+    setUser(updated);
+    return updated;
+  }
+
   const value = {
     user,
     loading,
@@ -70,6 +76,7 @@ export function AuthProvider({ children }) {
     loginWithGoogle,
     logout,
     refreshProfile,
+    updateUserProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
