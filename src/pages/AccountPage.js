@@ -1,10 +1,94 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ProfileIcon } from '../components/icons';
+import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
+
+const inputClass =
+  'rounded-xl border border-gray-200 px-3 py-2.5 text-input focus:border-brand-red focus:outline-none focus:ring-1 focus:ring-brand-red';
+
+function EditProfileForm({ user, onSaved, onCancel }) {
+  const { updateUserProfile } = useAuth();
+  const [form, setForm] = useState({
+    username: user?.username || '',
+    email: user?.email || '',
+    phone_number: user?.phone_number || '',
+  });
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError('');
+    setSubmitting(true);
+    try {
+      await updateUserProfile(form);
+      onSaved();
+    } catch (err) {
+      setError(extractErrorMessage(err, 'Could not update your profile.'));
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4 rounded-2xl border border-gray-100 p-4">
+      <ErrorMessage message={error} />
+
+      <label className="flex flex-col gap-1">
+        <span className="text-label text-brand-black">Username</span>
+        <input
+          value={form.username}
+          onChange={(e) => setForm({ ...form, username: e.target.value })}
+          required
+          className={inputClass}
+        />
+      </label>
+
+      <label className="flex flex-col gap-1">
+        <span className="text-label text-brand-black">Email</span>
+        <input
+          type="email"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          required
+          className={inputClass}
+        />
+      </label>
+
+      <label className="flex flex-col gap-1">
+        <span className="text-label text-brand-black">Phone number</span>
+        <input
+          value={form.phone_number}
+          onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
+          className={inputClass}
+        />
+      </label>
+
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          disabled={submitting}
+          className="flex-1 rounded-full bg-brand-red py-3 text-btn-lg text-white hover:bg-brand-red-dark disabled:opacity-60"
+        >
+          {submitting ? 'Saving…' : 'Save changes'}
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="flex-1 rounded-full border border-gray-200 py-3 text-btn-lg text-gray-600 hover:bg-gray-50"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  );
+}
 
 export default function AccountPage() {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const [editing, setEditing] = useState(false);
 
   function handleLogout() {
     logout();
@@ -37,28 +121,43 @@ export default function AccountPage() {
 
   return (
     <div className="px-4 py-6">
-      <div className="flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400">
-          <ProfileIcon className="h-8 w-8" />
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400">
+            <ProfileIcon className="h-8 w-8" />
+          </div>
+          <div>
+            <p className="text-h5 text-brand-black">{user?.username}</p>
+            <p className="text-body-sm text-gray-500">{user?.email}</p>
+          </div>
         </div>
-        <div>
-          <p className="text-h5 text-brand-black">{user?.username}</p>
-          <p className="text-body-sm text-gray-500">{user?.email}</p>
-        </div>
+        {!editing && (
+          <button
+            type="button"
+            onClick={() => setEditing(true)}
+            className="shrink-0 text-btn-sm font-semibold text-brand-red"
+          >
+            Edit
+          </button>
+        )}
       </div>
 
-      <div className="mt-8 flex flex-col divide-y divide-gray-100 rounded-2xl border border-gray-100">
-        <div className="flex items-center justify-between px-4 py-3.5">
-          <span className="text-body-sm text-gray-500">Phone number</span>
-          <span className="text-body-sm font-medium text-brand-black">
-            {user?.phone_number || '—'}
-          </span>
+      {editing ? (
+        <EditProfileForm user={user} onSaved={() => setEditing(false)} onCancel={() => setEditing(false)} />
+      ) : (
+        <div className="mt-8 flex flex-col divide-y divide-gray-100 rounded-2xl border border-gray-100">
+          <div className="flex items-center justify-between px-4 py-3.5">
+            <span className="text-body-sm text-gray-500">Phone number</span>
+            <span className="text-body-sm font-medium text-brand-black">
+              {user?.phone_number || '—'}
+            </span>
+          </div>
+          <div className="flex items-center justify-between px-4 py-3.5">
+            <span className="text-body-sm text-gray-500">Role</span>
+            <span className="text-body-sm font-medium capitalize text-brand-black">{user?.role}</span>
+          </div>
         </div>
-        <div className="flex items-center justify-between px-4 py-3.5">
-          <span className="text-body-sm text-gray-500">Role</span>
-          <span className="text-body-sm font-medium capitalize text-brand-black">{user?.role}</span>
-        </div>
-      </div>
+      )}
 
       {(user?.role === 'kitchen' || user?.role === 'admin') && (
         <Link
