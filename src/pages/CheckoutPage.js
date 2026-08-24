@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { getOperatingHours } from '../api/auth';
 import { createOrder } from '../api/orders';
 import { initializePayment } from '../api/payment';
 import Spinner from '../components/Spinner';
@@ -18,16 +17,9 @@ function defaultPickupTime() {
 
 export default function CheckoutPage() {
   const { cart, loading, refreshCart } = useCart();
-  const [hours, setHours] = useState([]);
   const [pickupTime, setPickupTime] = useState(defaultPickupTime());
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    getOperatingHours()
-      .then(setHours)
-      .catch(() => {});
-  }, []);
 
   const items = cart?.items || [];
 
@@ -82,19 +74,6 @@ export default function CheckoutPage() {
           <span>{formatNaira(cart.total)}</span>
         </div>
       </div>
-
-      {hours.length > 0 && (
-        <div className="mt-4 rounded-2xl bg-gray-50 p-4 text-body-sm text-gray-600">
-          <p className="mb-2 text-label text-brand-black">Operating hours</p>
-          <ul className="grid grid-cols-2 gap-x-4 gap-y-1">
-            {hours.map((h) => (
-              <li key={h.day}>
-                {h.day}: {h.is_open ? `${h.open_time} – ${h.close_time}` : 'Closed'}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       <form onSubmit={handlePlaceOrder} className="mt-6 flex flex-col gap-4">
         <ErrorMessage message={error} />
