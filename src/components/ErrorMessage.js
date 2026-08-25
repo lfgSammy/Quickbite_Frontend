@@ -10,7 +10,11 @@ export default function ErrorMessage({ message }) {
 export function extractErrorMessage(error, fallback = 'Something went wrong. Please try again.') {
   const data = error?.response?.data;
   if (!data) return fallback;
-  if (typeof data === 'string') return data;
+  if (typeof data === 'string') {
+    // Never show a raw server error page (HTML) to the user, whatever caused it.
+    if (data.trim().startsWith('<')) return fallback;
+    return data;
+  }
   if (data.error) {
     return Array.isArray(data.error) ? data.error.join(' ') : data.error;
   }
