@@ -21,10 +21,50 @@ export function clearTokens() {
   localStorage.removeItem('refresh_token');
 }
 
+const CART_TOKEN_KEY = 'cart_token';
+
+// A guest cart is identified only by this token, so it lives in localStorage
+// and rides along on every request until the cart is claimed at login.
+export function getCartToken() {
+  try {
+    return localStorage.getItem(CART_TOKEN_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function setCartToken(token) {
+  try {
+    if (token) localStorage.setItem(CART_TOKEN_KEY, token);
+  } catch {
+    /* private browsing - the cart just won't survive a reload */
+  }
+}
+
+export function clearCartToken() {
+  try {
+    localStorage.removeItem(CART_TOKEN_KEY);
+  } catch {
+    /* nothing to do */
+  }
+}
+
+// Cart responses carry the token while the cart has no owner. Capturing it
+// here means callers never have to think about it.
+export function rememberCart(data) {
+  if (data?.is_guest && data?.token) setCartToken(data.token);
+  else if (data && data.is_guest === false) clearCartToken();
+  return data;
+}
+
 client.interceptors.request.use((config) => {
   const { access } = getTokens();
   if (access) {
     config.headers.Authorization = `Bearer ${access}`;
+  }
+  const cartToken = getCartToken();
+  if (cartToken) {
+    config.headers['X-Cart-Token'] = cartToken;
   }
   return config;
 });

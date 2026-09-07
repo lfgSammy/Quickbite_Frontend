@@ -56,8 +56,11 @@ export default function App() {
               <Route path="/orders" element={<OrdersPage />} />
               <Route path="/account" element={<AccountPage />} />
 
+              {/* Open to guests: the cart is kept against a token until
+                  someone signs in. Checkout is where an account is needed. */}
+              <Route path="/cart" element={<CartPage />} />
+
               <Route element={<ProtectedRoute />}>
-                <Route path="/cart" element={<CartPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/orders/:orderId" element={<OrderDetailPage />} />
               </Route>

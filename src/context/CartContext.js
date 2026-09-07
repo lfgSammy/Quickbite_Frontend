@@ -9,19 +9,52 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Loaded for everyone: a guest's cart is real, it is just addressed by a
+  // token rather than an account.
   const refreshCart = useCallback(async () => {
-    if (!isAuthenticated) {
-      setCart(null);
-      return;
-    }
     setLoading(true);
     try {
       const data = await cartApi.getCart();
       setCart(data);
+    } catch {
+      // Now that this runs for guests too it fires on every page load, so a
+      // failure here (offline, server down) must not become an unhandled
+      // rejection. An unloadable cart just reads as empty; the rest of the
+      // app still works.
+      setCart(null);
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated]);
+  }, []);
+
+  // Signing in hands the guest cart to the account, so nothing chosen while
+  // signed out is lost.
+  // Held under `loading` on purpose. Checkout reads the cart straight after
+  // login, but the order is built from the *account's* cart server-side - so
+  // between signing in and the claim landing there is a window where the page
+  // shows the guest's items while the server still sees an empty cart, and
+  // placing the order fails. Consumers already wait on `loading`, so this
+  // keeps them waiting until the handover is real.
+  useEffect(() => {
+    if (!isAuthenticated) return undefined;
+    let cancelled = false;
+
+    setLoading(true);
+    cartApi
+      .claimCart()
+      .then(async (claimed) => {
+        if (cancelled) return;
+        if (claimed) setCart(claimed);
+        else await refreshCart();
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuthenticated, refreshCart]);
 
   useEffect(() => {
     refreshCart();

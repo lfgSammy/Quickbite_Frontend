@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import {
   getMenuItem,
@@ -7,16 +7,11 @@ import {
   getShawarmaExtras,
   getDrinks,
 } from '../api/menu';
-import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import Spinner from '../components/Spinner';
 import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
 import { ChevronLeftIcon, CartIcon } from '../components/icons';
 import { formatNaira } from '../utils/format';
-import {
-  savePendingCartAction,
-  consumePendingCartAction,
-} from '../utils/pendingCartAction';
 
 function ItemDetailHeader() {
   const navigate = useNavigate();
@@ -89,7 +84,6 @@ function Stepper({ value, onDecrement, onIncrement }) {
 export default function MenuItemPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
   const { addItem } = useCart();
 
   const [item, setItem] = useState(null);
@@ -101,7 +95,6 @@ export default function MenuItemPage() {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
-  const replayedRef = useRef(false);
 
   const [quantity, setQuantity] = useState(1);
   const [sizeId, setSizeId] = useState('');
@@ -155,20 +148,6 @@ export default function MenuItemPage() {
       cancelled = true;
     };
   }, [id]);
-
-  // Finish what a guest started: they configured this item, tapped Add to
-  // cart / Buy Now, got sent to log in, and came back here. Replay the exact
-  // action they asked for instead of making them set it all up again.
-  useEffect(() => {
-    if (!isAuthenticated || !item || replayedRef.current) return;
-
-    const pending = consumePendingCartAction(id);
-    if (!pending) return;
-
-    replayedRef.current = true;
-    submitCartPayload(pending.payload, pending.redirectTo, pending.action);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated, item, id]);
 
   const selectedSize = item?.sizes?.find((s) => String(s.id) === sizeId);
   const selectedShawarmaOption = item?.shawarma_options?.find(
@@ -265,17 +244,11 @@ export default function MenuItemPage() {
   }
 
   async function handleAddToCart(redirectTo, action) {
-    // Build the payload before the auth check: a guest's choices would
-    // otherwise be lost on the trip to the login page, leaving them to
-    // re-pick everything from scratch afterwards.
     const payload = buildCartPayload();
 
-    if (!isAuthenticated) {
-      savePendingCartAction({ menuItemId: id, payload, redirectTo, action });
-      navigate('/login', { state: { from: { pathname: `/menu/${id}` } } });
-      return;
-    }
-
+    // No auth check here any more: the cart itself is open to guests, and the
+    // server keeps it against a token. Signing in is only required to check
+    // out, which /checkout handles.
     await submitCartPayload(payload, redirectTo, action);
   }
 

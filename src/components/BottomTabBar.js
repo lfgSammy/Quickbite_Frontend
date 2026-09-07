@@ -1,17 +1,25 @@
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { HomeIcon, OrdersIcon, ProfileIcon } from './icons';
 
-const TABS = [
-  { to: '/', label: 'Home', icon: HomeIcon, end: true },
-  { to: '/orders', label: 'Orders', icon: OrdersIcon },
-  { to: '/account', label: 'Account', icon: ProfileIcon },
-];
-
 export default function BottomTabBar() {
+  const { user } = useAuth();
+  const isStaff = user?.role === 'kitchen' || user?.role === 'admin';
+
+  // Staff live in the queue all shift; their own customer order history is
+  // not what they need one tap away. It stays reachable from Account.
+  const tabs = [
+    { to: '/', label: 'Home', icon: HomeIcon, end: true },
+    isStaff
+      ? { to: '/kitchen', label: 'Queue', icon: OrdersIcon }
+      : { to: '/orders', label: 'Orders', icon: OrdersIcon },
+    { to: '/account', label: 'Account', icon: ProfileIcon },
+  ];
+
   return (
     <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-gray-100 bg-white pb-[env(safe-area-inset-bottom)]">
       <div className="mx-auto flex max-w-md items-center justify-around">
-        {TABS.map(({ to, label, icon: Icon, end }) => (
+        {tabs.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
             to={to}
