@@ -36,10 +36,10 @@ client.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const isTokenIssuanceEndpoint = [
-      '/user/auth/login/',
-      '/user/auth/register/',
-      '/user/auth/refresh/',
-      '/user/auth/google/',
+      '/auth/login/',
+      '/auth/register/',
+      '/auth/refresh/',
+      '/auth/google/',
     ].some((path) => originalRequest?.url?.includes(path));
 
     if (
@@ -58,7 +58,7 @@ client.interceptors.response.use(
       try {
         if (!refreshPromise) {
           refreshPromise = axios
-            .post(`${baseURL}/user/auth/refresh/`, { refresh })
+            .post(`${baseURL}/auth/refresh/`, { refresh })
             .finally(() => {
               refreshPromise = null;
             });
@@ -77,5 +77,15 @@ client.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Paginated list endpoints (orders, users, notifications) answer with
+// {count, next, previous, results}; the rest still return a bare array.
+// Callers only ever want the rows, so normalise both shapes here rather than
+// teaching every page about pagination.
+export function unwrapList(data) {
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.results)) return data.results;
+  return [];
+}
 
 export default client;
