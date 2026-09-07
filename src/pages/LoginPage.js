@@ -99,7 +99,11 @@ export default function LoginPage() {
 
       <p className="text-center text-body-sm text-gray-500">
         Don't have an account?{' '}
-        <Link to="/register" className="font-semibold text-brand-red">
+        <Link
+          to="/register"
+          state={location.state}
+          className="font-semibold text-brand-red"
+        >
           Sign up
         </Link>
       </p>
