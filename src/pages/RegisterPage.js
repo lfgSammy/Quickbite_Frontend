@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
 import { GoogleIcon } from '../components/icons';
@@ -13,6 +13,8 @@ const inputClass =
 export default function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo = location.state?.from?.pathname || '/';
   const [form, setForm] = useState({
     username: '',
     email: '',
@@ -32,7 +34,7 @@ export default function RegisterPage() {
     setSubmitting(true);
     try {
       await register(form);
-      navigate('/', { replace: true });
+      navigate(redirectTo, { replace: true });
     } catch (err) {
       setError(extractErrorMessage(err, 'Could not create your account.'));
     } finally {
@@ -116,7 +118,7 @@ export default function RegisterPage() {
 
       <button
         type="button"
-        onClick={() => redirectToGoogle('/')}
+        onClick={() => redirectToGoogle(redirectTo)}
         className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-200 py-3 text-btn-lg font-medium text-brand-black hover:bg-gray-50"
       >
         <GoogleIcon className="h-5 w-5" />
@@ -125,7 +127,7 @@ export default function RegisterPage() {
 
       <p className="text-center text-body-sm text-gray-500">
         Already have an account?{' '}
-        <Link to="/login" className="font-semibold text-brand-red">
+        <Link to="/login" state={location.state} className="font-semibold text-brand-red">
           Log in
         </Link>
       </p>
