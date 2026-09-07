@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import {
   getMenuItem,
@@ -13,6 +13,10 @@ import Spinner from '../components/Spinner';
 import ErrorMessage, { extractErrorMessage } from '../components/ErrorMessage';
 import { ChevronLeftIcon, CartIcon } from '../components/icons';
 import { formatNaira } from '../utils/format';
+import {
+  savePendingCartAction,
+  consumePendingCartAction,
+} from '../utils/pendingCartAction';
 
 function ItemDetailHeader() {
   const navigate = useNavigate();
@@ -97,6 +101,7 @@ export default function MenuItemPage() {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
+  const replayedRef = useRef(false);
 
   const [quantity, setQuantity] = useState(1);
   const [sizeId, setSizeId] = useState('');
@@ -151,6 +156,20 @@ export default function MenuItemPage() {
     };
   }, [id]);
 
+  // Finish what a guest started: they configured this item, tapped Add to
+  // cart / Buy Now, got sent to log in, and came back here. Replay the exact
+  // action they asked for instead of making them set it all up again.
+  useEffect(() => {
+    if (!isAuthenticated || !item || replayedRef.current) return;
+
+    const pending = consumePendingCartAction(id);
+    if (!pending) return;
+
+    replayedRef.current = true;
+    submitCartPayload(pending.payload, pending.redirectTo, pending.action);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, item, id]);
+
   const selectedSize = item?.sizes?.find((s) => String(s.id) === sizeId);
   const selectedShawarmaOption = item?.shawarma_options?.find(
     (o) => String(o.id) === shawarmaOptionId
@@ -200,16 +219,7 @@ export default function MenuItemPage() {
     setDrinkQty((prev) => ({ ...prev, [drinkId]: clamped }));
   }
 
-  async function handleAddToCart(redirectTo, action) {
-    if (!isAuthenticated) {
-      navigate('/login', { state: { from: { pathname: `/menu/${id}` } } });
-      return;
-    }
-
-    setError('');
-    setAddedToCart(false);
-    setSubmitting(action);
-
+  function buildCartPayload() {
     const payload = {
       menu_item_id: item.id,
       quantity,
@@ -231,6 +241,14 @@ export default function MenuItemPage() {
         .map(([extra_id]) => ({ extra_id: Number(extra_id), is_added: true }));
     }
 
+    return payload;
+  }
+
+  async function submitCartPayload(payload, redirectTo, action) {
+    setError('');
+    setAddedToCart(false);
+    setSubmitting(action);
+
     try {
       await addItem(payload);
       if (redirectTo) {
@@ -244,6 +262,21 @@ export default function MenuItemPage() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  async function handleAddToCart(redirectTo, action) {
+    // Build the payload before the auth check: a guest's choices would
+    // otherwise be lost on the trip to the login page, leaving them to
+    // re-pick everything from scratch afterwards.
+    const payload = buildCartPayload();
+
+    if (!isAuthenticated) {
+      savePendingCartAction({ menuItemId: id, payload, redirectTo, action });
+      navigate('/login', { state: { from: { pathname: `/menu/${id}` } } });
+      return;
+    }
+
+    await submitCartPayload(payload, redirectTo, action);
   }
 
   if (loading) {
